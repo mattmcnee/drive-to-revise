@@ -20,8 +20,8 @@ const Gate = ({ position, rotation }: GateProps) => {
 
   return (
     <group ref={gateGroup}>
-      <GateShape position={new Vector3(-0.27, 0.2, 0)} />
-      <GateShape position={new Vector3(0.27, 0.2, 0)} />
+      <GateShape position={new Vector3(-0.27, 0.2, 0)} shapeType="hexagon" />
+      <GateShape position={new Vector3(0.27, 0.2, 0)} shapeType="hexagon"/>
     </group>
   );
 };

@@ -1,4 +1,4 @@
-import { Vector3 } from "three";
+import { Vector3, Shape } from "three";
 
 export type Segment = {
   points: Vector3[];
@@ -63,4 +63,21 @@ export function generateRoadSegment(previousEndPoint?: Vector3, previousDirectio
     points: controlPoints,
     endDirection: lastDirection
   };
+}
+
+export const getHexagonShape = (size: number) => {
+    const hexagonShape = new Shape();
+    for (let i = 0; i < 6; i++) {
+      const angle = (i * Math.PI) / 3;
+      const x = size * Math.cos(angle);
+      const y = size * Math.sin(angle);
+      if (i === 0) {
+        hexagonShape.moveTo(x, y);
+      } else {
+        hexagonShape.lineTo(x, y);
+      }
+    }
+    hexagonShape.closePath();
+
+    return hexagonShape;
 }
