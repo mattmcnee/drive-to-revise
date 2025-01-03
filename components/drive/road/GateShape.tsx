@@ -2,10 +2,15 @@ import React, { useRef } from "react";
 import { Extrude } from "@react-three/drei";
 import { Shape, Vector3, Mesh } from "three";
 import { useFrame } from "@react-three/fiber";
-import { config, getHexagonShape } from "@/components/drive/utils";
-
-const color = "#F48E20";
-const glow = config.gate.glow;
+import { 
+  config, 
+  getHexagonShape, 
+  getCircleShape, 
+  getDiamondShape,
+  getSquareShape,
+  getTriangleShape,
+  getPentagonShape
+} from "@/components/drive/utils";
 
 interface GateShapeProps {
     position: Vector3;
@@ -14,13 +19,51 @@ interface GateShapeProps {
 
 const GateShape = ({ position, shapeType }: GateShapeProps) => {
   const meshRef = useRef<Mesh>(null);
-  const size = 0.08;
-    
-  // Create a hexagon shape (2D)
-  const shape = getHexagonShape(size);
+  const glow = config.gate.glow;
 
+  let shape, color, size;
+  let offset = 0;
+  switch (shapeType) {
+  case "hexagon":
+    size = 0.08;
+    color = "#F48E20";
+    shape = getHexagonShape(size);
+    break;
+  case "circle":
+    size = 0.07;
+    color = "#43F420";
+    shape = getCircleShape(size);
+    break;
+  case "diamond":
+    size = 0.08;
+    color = "#F4F420";
+    shape = getDiamondShape(size);
+    break;
+  case "square":
+    size = 0.06;
+    color = "#F42020";
+    shape = getSquareShape(size);
+    break;
+  case "triangle":
+    size = 0.085;
+    offset = -0.02;
+    color = "#2E20F4";
+    shape = getTriangleShape(size);
+    break;
+  case "pentagon":
+    size = 0.08;
+    color = "#9820F4";
+    shape = getPentagonShape(size);
+    break;
+  default:
+    size = 0.08;
+    color = "#F48E20";
+    shape = getHexagonShape(size);
+    break;
+  }
+    
   return (
-    <mesh ref={meshRef} position={position}>
+    <mesh ref={meshRef} position={[position.x, position.y + offset, position.z]}>
       <Extrude 
         args={[shape, { 
           depth: 0.02, 

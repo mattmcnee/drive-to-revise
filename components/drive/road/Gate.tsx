@@ -4,11 +4,12 @@ import { config } from "@/components/drive/utils";
 import GateShape from "@/components/drive/road/GateShape";
 
 interface GateProps {
-    position: Vector3
-    rotation: Vector3
+  position: Vector3
+  rotation: Vector3
+  index: number
 }
 
-const Gate = ({ position, rotation }: GateProps) => {
+const Gate = ({ index, position, rotation }: GateProps) => {
   const gateGroup = useRef<Group>(null);
 
   useEffect(() => {
@@ -18,10 +19,28 @@ const Gate = ({ position, rotation }: GateProps) => {
     }
   }, [position, rotation]);
 
+  let shapes;
+  switch (index) {
+  case 0:
+    shapes = ["hexagon", "triangle"];
+    break;
+  case 1:
+    shapes = ["square", "circle"];
+    break;
+  case 2:
+    shapes = ["pentagon", "diamond"];
+    break;
+  default:
+    shapes = ["hexagon", "triangle"];
+    break;
+  }
+
+  
+
   return (
     <group ref={gateGroup}>
-      <GateShape position={new Vector3(-0.27, 0.2, 0)} shapeType="hexagon" />
-      <GateShape position={new Vector3(0.27, 0.2, 0)} shapeType="hexagon"/>
+      <GateShape position={new Vector3(-0.27, 0.2, 0)} shapeType={shapes[0]} />
+      <GateShape position={new Vector3(0.27, 0.2, 0)} shapeType={shapes[1]}/>
     </group>
   );
 };

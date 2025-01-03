@@ -29,9 +29,9 @@ export const GateSegment = ({ curve }: GateSegmentProps) => {
   // Render gates at 1/3, 2/3, and end of the curve
   return (
     <group>
-      <Gate position={oneThird} rotation={getRotation(tangentOneThird)} />
-      <Gate position={twoThirds} rotation={getRotation(tangentTwoThirds)} />
-      <Gate position={end} rotation={getRotation(tangentEnd)} />
+      <Gate index={0} position={oneThird} rotation={getRotation(tangentOneThird)} />
+      <Gate index={1} position={twoThirds} rotation={getRotation(tangentTwoThirds)} />
+      <Gate index={2} position={end} rotation={getRotation(tangentEnd)} />
     </group>
   );
 };

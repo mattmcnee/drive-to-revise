@@ -1,3 +1,4 @@
+import exp from "constants";
 import { Vector3, Shape } from "three";
 
 export type Segment = {
@@ -35,7 +36,7 @@ export const config = {
   segmentDetail: 200
 };
 
-export function generateRoadSegment(previousEndPoint?: Vector3, previousDirection?: Vector3) {
+export const generateRoadSegment = (previousEndPoint?: Vector3, previousDirection?: Vector3) => {
   const controlPoints: Vector3[] = [];
   const startPoint = previousEndPoint || new Vector3(0, 0, 0);
   const prevDir = previousDirection || new Vector3(0, 0, -1);
@@ -63,21 +64,88 @@ export function generateRoadSegment(previousEndPoint?: Vector3, previousDirectio
     points: controlPoints,
     endDirection: lastDirection
   };
-}
+};
 
 export const getHexagonShape = (size: number) => {
-    const hexagonShape = new Shape();
-    for (let i = 0; i < 6; i++) {
-      const angle = (i * Math.PI) / 3;
-      const x = size * Math.cos(angle);
-      const y = size * Math.sin(angle);
-      if (i === 0) {
-        hexagonShape.moveTo(x, y);
-      } else {
-        hexagonShape.lineTo(x, y);
-      }
+  const hexagonShape = new Shape();
+  for (let i = 0; i < 6; i++) {
+    const angle = (i * Math.PI) / 3;
+    const x = size * Math.cos(angle);
+    const y = size * Math.sin(angle);
+    if (i === 0) {
+      hexagonShape.moveTo(x, y);
+    } else {
+      hexagonShape.lineTo(x, y);
     }
-    hexagonShape.closePath();
+  }
+  hexagonShape.closePath();
 
-    return hexagonShape;
-}
+  return hexagonShape;
+};
+
+export const getCircleShape = (size: number) => {
+  const circleShape = new Shape();
+  circleShape.moveTo(0, -size);
+  circleShape.absarc(0, 0, size, -Math.PI / 2, Math.PI * 1.5, false);
+
+  return circleShape;
+};
+
+export const getDiamondShape = (size: number) => {
+  const diamondShape = new Shape();
+  diamondShape.moveTo(0, size);
+  diamondShape.lineTo(size / 1.5, 0);
+  diamondShape.lineTo(0, -size);
+  diamondShape.lineTo(-size / 1.5, 0);
+  diamondShape.closePath();
+
+  return diamondShape;
+};
+
+export const getPentagonShape = (size: number) => {
+  const pentagonShape = new Shape();
+  for (let i = 0; i < 5; i++) {
+    const angle = ((i * 2 * Math.PI) / 5) - Math.PI / 2 - Math.PI;
+    const x = size * Math.cos(angle);
+    const y = size * Math.sin(angle);
+    if (i === 0) {
+      pentagonShape.moveTo(x, y);
+    } else {
+      pentagonShape.lineTo(x, y);
+    }
+  }
+  pentagonShape.closePath();
+
+  return pentagonShape;
+};
+
+export const getSquareShape = (size: number) => {
+  const squareShape = new Shape();
+  squareShape.moveTo(-size, -size);
+  squareShape.lineTo(size, -size);
+  squareShape.lineTo(size, size);
+  squareShape.lineTo(-size, size);
+  squareShape.closePath();
+
+  return squareShape;
+};
+
+export const getTriangleShape = (size: number) => {
+  const triangleShape = new Shape();
+  for (let i = 0; i < 3; i++) {
+    const angle = (i * (2 * Math.PI)) / 3 + (Math.PI / 6) + Math.PI;
+    const x = size * Math.cos(angle);
+    const y = size * Math.sin(angle);
+    if (i === 0) {
+      triangleShape.moveTo(x, y);
+    } else {
+      triangleShape.lineTo(x, y);
+    }
+  }
+  triangleShape.closePath();
+
+  return triangleShape;
+};
+
+
+
