@@ -2,7 +2,8 @@ import React, { useState, useRef, useEffect } from "react";
 import { useFrame, useThree } from "@react-three/fiber";
 import { useGLTF } from "@react-three/drei";
 import { Mesh, Vector3, CubicBezierCurve3 } from "three";
-import { RoadData, Segment } from "./drive/utils";
+import { RoadData, Segment, getSidewaysRotation } from "./drive/utils";
+import { get } from "http";
 
 interface VehicleProps {
   roadData: RoadData,
@@ -36,8 +37,8 @@ const Vehicle = ({
   // Manages left and right lane changes
   const roadEdge = 2.7;
   const offsetAcceleration = 0.9;
-  const targetOffset = useRef(0);
-  const currentOffset = useRef(0);
+  const targetOffset = useRef(-roadEdge);
+  const currentOffset = useRef(-roadEdge);
 
   // Manages vehicle speed
   const speedAcceleration = 0.3;
@@ -53,7 +54,9 @@ const Vehicle = ({
 
   useEffect(() => {
     const moveVehicleLeft = (isLeft: boolean) => {
-      targetOffset.current = isLeft ? -roadEdge : roadEdge;
+      if (targetSpeed.current > 0) {
+        targetOffset.current = isLeft ? -roadEdge : roadEdge;
+      }
     };
 
     // Keyboard via arrows or 'wasd'
@@ -153,6 +156,14 @@ const Vehicle = ({
       const offset = new Vector3(0, 0.3, -0.6).applyQuaternion(vehicleRef.current.quaternion);
       camera.position.copy(vehicleRef.current.position.clone().add(offset));
       camera.lookAt(vehicleRef.current.position);
+
+      // roadEdge
+      const sideways = targetOffset.current - currentOffset.current;
+      if (sideways > 0) {
+        vehicleRef.current.rotation.y -= getSidewaysRotation(sideways, roadEdge);
+      } else if (sideways < 0) {
+        vehicleRef.current.rotation.y += getSidewaysRotation(sideways, roadEdge);
+      }
 
       setProgress((prev) => {
         const newProgress = prev + (currentSpeed.current * deltaTime) / length;

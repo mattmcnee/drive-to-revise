@@ -155,6 +155,19 @@ export const getNextQuestion = (questionIndex: number, segmentIndex: number, roa
   }
 };
 
+export const getSidewaysRotation = (sideways: number, roadEdge: number) => { 
+  let scale = 0;
+  if (Math.abs(sideways) <= roadEdge) {
+     // Scale proportionally within roadEdge
+    scale = 0.08 * (Math.abs(sideways) / roadEdge);
+  } else if (Math.abs(sideways) <= 2 * roadEdge) {
+    // Decrease scale past roadEdge
+    scale = 0.08 * (1 - (Math.abs(sideways) - roadEdge) / roadEdge);
+  }
+
+  return scale;
+}
+
 export const getHexagonShape = (size: number) => {
   const hexagonShape = new Shape();
   for (let i = 0; i < 6; i++) {
