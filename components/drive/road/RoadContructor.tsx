@@ -6,6 +6,7 @@ import { CurbSegment } from "./CurbSegment";
 import { LineSegment } from "./LineSegment";
 import Gate from "./Gate";
 import { GateSegment } from "./GateSegment";
+import { TreeSegment } from "./TreeSegment";
 
 export const RoadContructor = ({ segments }: { segments: Segment[] }) => {
   console.log(segments);
@@ -26,6 +27,7 @@ export const RoadContructor = ({ segments }: { segments: Segment[] }) => {
             <CurbSegment curve={curve} isLeft={true} />
             <CurbSegment curve={curve} isLeft={false} />
             <LineSegment curve={curve} />
+            <TreeSegment curve={curve} index={index} />
             {segment.hasGates && <GateSegment curve={curve} segment={segment} />}
           </React.Fragment>
         );

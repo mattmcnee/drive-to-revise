@@ -56,6 +56,15 @@ export const config = {
     pole: 0.03,
     glow: 0.5
   },
+  tree:{
+    maxOffset: 50,
+    minOffset: 2,
+    maxHeight: 0.7,
+    minHeight: 0.3,
+    maxRadius: 0.1,
+    minRadius: 0.05,
+    count: 100
+  },
   segmentDetail: 200
 };
 
