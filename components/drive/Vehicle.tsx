@@ -2,8 +2,7 @@ import React, { useState, useRef, useEffect } from "react";
 import { useFrame, useThree } from "@react-three/fiber";
 import { useGLTF } from "@react-three/drei";
 import { Mesh, Vector3, CubicBezierCurve3 } from "three";
-import { RoadData, Segment, getSidewaysRotation } from "./drive/utils";
-import { get } from "http";
+import { RoadData, Segment, getSidewaysRotation } from "./utils";
 
 interface VehicleProps {
   roadData: RoadData,

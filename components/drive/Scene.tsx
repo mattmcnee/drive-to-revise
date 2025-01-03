@@ -9,7 +9,7 @@ import { PrimaryButton } from "@/components/ui/Buttons";
 import styles from "./Scene.module.scss";
 
 import { RoadData, GameState, generateRoadSegment, getNextQuestion, getNextSegmentsFirstQuestion } from "@/components/drive/utils";
-import Vehicle from "../Vehicle";
+import Vehicle from "./Vehicle";
 import ScenePanel from "./ScenePanel";
 
 import questions from "./questions.json";
