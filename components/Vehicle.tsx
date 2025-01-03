@@ -38,7 +38,7 @@ const Vehicle = ({
     const tangent = curve.getTangent(progress).normalize();
 
     return { length, point, tangent };
-  }
+  };
     
   useFrame(() => {
     if (roadData.segments.length > 0 && vehicleRef.current) {
@@ -62,34 +62,37 @@ const Vehicle = ({
       camera.position.copy(vehicleRef.current.position.clone().add(offset));
       camera.lookAt(vehicleRef.current.position);
 
-        setProgress((prev) => {
-          const newProgress = prev + (speed * deltaTime) / length;
-          if (newProgress >= 1) {
-            if (adjustedSegmentIndex < roadData.segments.length - 1) {
-              setCurrentSegmentIndex(currentSegmentIndex + 1);
-              addRoadSegment();
-              if (currentSegmentIndex > 0) {
-                removePassedSegment();
-              }
-              return 0;
-            } else {
-              alert("Reached the end of the segment!");
-              return 1;
+      setProgress((prev) => {
+        const newProgress = prev + (speed * deltaTime) / length;
+        if (newProgress >= 1) {
+          if (adjustedSegmentIndex < roadData.segments.length - 1) {
+            setCurrentSegmentIndex(currentSegmentIndex + 1);
+            addRoadSegment();
+            if (currentSegmentIndex > 0) {
+              removePassedSegment();
             }
-          } 
-          return newProgress;
-        });
-      }
-    });
+            
+            return 0;
+          } else {
+            alert("Reached the end of the segment!");
+            
+            return 1;
+          }
+        } 
+        
+        return newProgress;
+      });
+    }
+  });
 
-    return (
-      <>
-        <mesh ref={vehicleRef}  position={[0, 0.1, 0]}>
-          <boxGeometry args={[0.3, 0.2, 0.6]} />
-          <meshStandardMaterial color="red" />
-        </mesh>   
-      </>
-    );
+  return (
+    <>
+      <mesh ref={vehicleRef}  position={[0, 0.1, 0]}>
+        <boxGeometry args={[0.3, 0.2, 0.6]} />
+        <meshStandardMaterial color="red" />
+      </mesh>   
+    </>
+  );
 };
 
 export default Vehicle;
