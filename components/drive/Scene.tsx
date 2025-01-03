@@ -1,6 +1,6 @@
 import React, { useRef, useState, useEffect } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
-import { OrbitControls } from "@react-three/drei";
+import { OrbitControls, Sky } from "@react-three/drei";
 import { Vector3 } from "three";
 
 import { generateRoadSegment } from "./utils";
@@ -62,8 +62,10 @@ const Scene = () => {
   return (
     <div className={styles.sceneContainer}>
       <Canvas className={styles.canvas}>
-        <ambientLight intensity={0.5} />
-        <pointLight position={[10, 10, 10]} />
+
+        <ambientLight intensity={0.1}/>
+        <directionalLight position={[5, 10, 7.5]} intensity={0.9} />
+        <Sky distance={450000} sunPosition={[100, 10, -100]} inclination={0.9} azimuth={0.65}/>
 
         <mesh position={[0, 0, 0]}>
           <boxGeometry args={[1, 1, 1]} />
