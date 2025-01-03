@@ -29,16 +29,20 @@ const Vehicle = ({
 
   // Manages left and right lane changes
   const roadEdge = 2.7;
-  const smoothSpeed = 0.9;
+  const offsetAcceleration = 0.9;
   const targetOffset = useRef(0);
   const currentOffset = useRef(0);
 
-  let speed = 0;
+  // Manages vehicle speed
+  const speedAcceleration = 0.3;
+  const speedDeceleration = 1.2;
+  const targetSpeed = useRef(0);
+  const currentSpeed = useRef(0);
 
   if (accelerate) {
-    speed = 4.4;
+    targetSpeed.current = 8;
   } else {
-    speed = 0;
+    targetSpeed.current = 0;
   }
 
   useEffect(() => {
@@ -83,8 +87,12 @@ const Vehicle = ({
     
   useFrame(() => {
     if (roadData.segments.length > 0 && vehicleRef.current) {
-      currentOffset.current += (targetOffset.current - currentOffset.current) * smoothSpeed * 0.1;
-
+      currentOffset.current += (targetOffset.current - currentOffset.current) * offsetAcceleration * 0.1;
+      if (currentSpeed.current > targetSpeed.current) {
+        currentSpeed.current = Math.max(currentSpeed.current - speedDeceleration * 0.1, 0);
+      } else {
+        currentSpeed.current = Math.min(targetSpeed.current, currentSpeed.current + speedAcceleration * 0.1);
+      }
       // How much time has passed
       const currentTime = performance.now();
       const deltaTime = (currentTime - lastTime.current) / 1000;
@@ -108,7 +116,7 @@ const Vehicle = ({
       camera.lookAt(vehicleRef.current.position);
 
       setProgress((prev) => {
-        const newProgress = prev + (speed * deltaTime) / length;
+        const newProgress = prev + (currentSpeed.current * deltaTime) / length;
         if (newProgress >= 1) {
           handleGatesPass(2, currentSegment, adjustedSegmentIndex);
           if (adjustedSegmentIndex < roadData.segments.length - 1) {
