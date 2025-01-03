@@ -1,39 +1,40 @@
-import React, { useRef, useState } from 'react';
-import { Canvas, useFrame } from '@react-three/fiber';
-import { Mesh } from 'three';
+import React, { useRef, useState } from "react";
+import { Canvas, useFrame } from "@react-three/fiber";
+import { OrbitControls } from "@react-three/drei";
+import { Vector3 } from "three";
 
-const SpinningCube = () => {
-  const meshRef = useRef<Mesh>(null);
-  const [hovered, setHovered] = useState(false);
-  const [active, setActive] = useState(false);
+type Segment = {
+  points: Vector3[];
+};
 
-  useFrame(() => {
-    if (meshRef.current) {
-      meshRef.current.rotation.x += 0.01;
-      meshRef.current.rotation.y += 0.01;
-    }
-  });
-
-  return (
-    <mesh
-      ref={meshRef}
-      scale={active ? 1.5 : 1}
-      onClick={() => setActive(!active)}
-      onPointerOver={() => setHovered(true)}
-      onPointerOut={() => setHovered(false)}
-    >
-      <boxGeometry args={[1, 1, 1]} />
-      <meshStandardMaterial color={hovered ? 'hotpink' : 'orange'} />
-    </mesh>
-  );
+type RoadData = {
+  segments: Segment[];
+  lastDirection: Vector3;
 };
 
 const Scene = () => {
+  const [roadData, setRoadData] = useState<RoadData>({
+    segments: [],
+    lastDirection: new Vector3(),
+  });
+
   return (
     <Canvas>
       <ambientLight intensity={0.5} />
       <pointLight position={[10, 10, 10]} />
-      <SpinningCube />
+
+      <mesh position={[0, 0, 0]}>
+        <boxGeometry args={[1, 1, 1]} />
+        <meshStandardMaterial color={"orange"} />
+      </mesh>
+
+      <OrbitControls 
+        enableZoom={true}
+        enablePan={true}
+        enableRotate={true}
+        minDistance={2}
+        maxDistance={50}
+      />
     </Canvas>
   );
 };
