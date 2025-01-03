@@ -1,25 +1,24 @@
-import React from "react";
+import React, { useMemo } from "react";
 import { CubicBezierCurve3 } from "three";
 import RoadSegment from "@/components/drive/road/RoadSegment";
 import { Segment } from "@/components/drive/utils";
 import { CurbSegment } from "./CurbSegment";
 import { LineSegment } from "./LineSegment";
-import Gate from "./Gate";
 import { GateSegment } from "./GateSegment";
 import { TreeSegment } from "./TreeSegment";
 
-export const RoadContructor = ({ segments }: { segments: Segment[] }) => {
-  console.log(segments);
-  
+const RoadContructor = React.memo(({ segments }: { segments: Segment[] }) => {
   return (
     <group>
       {segments.map((segment, index) => {
-        const curve = new CubicBezierCurve3(
-          segment.points[0],
-          segment.points[1],
-          segment.points[2],
-          segment.points[3]
-        );
+        const curve = useMemo(() => {
+          return new CubicBezierCurve3(
+            segment.points[0],
+            segment.points[1],
+            segment.points[2],
+            segment.points[3]
+          );
+        }, [segment.points]);
 
         return (
           <React.Fragment key={index}>
@@ -34,6 +33,6 @@ export const RoadContructor = ({ segments }: { segments: Segment[] }) => {
       })}
     </group>
   );
-};
+});
 
 export default RoadContructor;
