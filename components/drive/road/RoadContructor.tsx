@@ -4,6 +4,8 @@ import RoadSegment from "@/components/drive/road/RoadSegment";
 import { Segment } from "@/components/drive/utils";
 import { CurbSegment } from "./CurbSegment";
 import { LineSegment } from "./LineSegment";
+import Gate from "./Gate";
+import { GateSegment } from "./GateSegment";
 
 export const RoadContructor = ({ segments }: { segments: Segment[] }) => {
   console.log(segments);
@@ -23,6 +25,7 @@ export const RoadContructor = ({ segments }: { segments: Segment[] }) => {
             <RoadSegment curve={curve} />
             <CurbSegment curve={curve} isLeft={true} />
             <CurbSegment curve={curve} isLeft={false} />
+            <GateSegment curve={curve} />
             <LineSegment curve={curve} />
           </React.Fragment>
         );

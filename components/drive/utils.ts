@@ -26,6 +26,12 @@ export const config = {
     dash: 1,
     gap: 0.8
   },
+  gate: {
+    height: 0.7,
+    width: 0.515,
+    pole: 0.03,
+    glow: 0.5
+  },
   segmentDetail: 200
 };
 
