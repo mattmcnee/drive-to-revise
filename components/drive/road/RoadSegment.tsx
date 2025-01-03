@@ -1,6 +1,6 @@
 import React, { useRef, useEffect } from "react";
 import { CubicBezierCurve3, Vector3, Mesh, BufferGeometry, MeshStandardMaterial, Float32BufferAttribute } from "three";
-import { config } from "@/components/drive/config";
+import { config } from "@/components/drive/utils";
 
 interface RoadSegmentProps {
   curve: CubicBezierCurve3;

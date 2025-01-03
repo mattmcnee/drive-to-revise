@@ -2,6 +2,20 @@ import { Vector3 } from "three";
 
 export type Segment = {
   points: Vector3[];
+  endDirection?: Vector3;
+};
+
+export type RoadData = {
+  segments: Segment[];
+  lastDirection: Vector3;
+};
+
+export const config = {
+  road: {
+    width: 0.5,
+    height: 0.001
+  },
+  segmentDetail: 200
 };
 
 export function generateRoadSegment(previousEndPoint?: Vector3, previousDirection?: Vector3) {

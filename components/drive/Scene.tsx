@@ -10,15 +10,7 @@ import { PrimaryButton } from "@/components/ui/Buttons";
 
 import styles from "./Scene.module.scss";
 
-type Segment = {
-  points: Vector3[];
-  endDirection: Vector3;
-};
-
-type RoadData = {
-  segments: Segment[];
-  lastDirection: Vector3;
-};
+import { RoadData } from "@/components/drive/utils";
 
 const Scene = () => {
   const [roadData, setRoadData] = useState<RoadData>({
