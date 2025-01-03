@@ -11,6 +11,7 @@ import { PrimaryButton } from "@/components/ui/Buttons";
 import styles from "./Scene.module.scss";
 
 import { RoadData } from "@/components/drive/utils";
+import Vehicle from "../Vehicle";
 
 const Scene = () => {
   const [roadData, setRoadData] = useState<RoadData>({
@@ -74,10 +75,7 @@ const Scene = () => {
         <directionalLight position={[5, 10, 7.5]} intensity={0.9} />
         <Sky distance={450000} sunPosition={[100, 10, -100]} inclination={0.9} azimuth={0.65}/>
 
-        <mesh position={[0, 0, 0]}>
-          <boxGeometry args={[1, 1, 1]} />
-          <meshStandardMaterial color="orange" />
-        </mesh>
+        <Vehicle roadData={roadData} removePassedSegment={removePassedSegment} addRoadSegment={addSegment} />
 
         <RoadContructor segments={roadData.segments} />
 
@@ -91,9 +89,6 @@ const Scene = () => {
       </Canvas>
 
       <div className={styles.sceneOverlay}>
-        <PrimaryButton onClick={addSegment}>
-          Add Segment
-        </PrimaryButton>
       </div>
     </div>
   );
