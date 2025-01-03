@@ -10,12 +10,13 @@
     "deploy": "vercel --prod"
   },
   "dependencies": {
-    "@react-three/fiber": "^8.16.2",
     "@react-three/drei": "^9.105.4",
+    "@react-three/fiber": "^8.16.2",
     "@react-three/postprocessing": "^2.16.2",
     "next": "^14.2.22",
     "react": "^18",
     "react-dom": "^18",
+    "sass": "^1.83.0",
     "three": "^0.163.0"
   },
   "devDependencies": {
