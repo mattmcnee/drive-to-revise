@@ -21,6 +21,11 @@ export const config = {
     width: 0.03,
     drop: 0.02
   },
+  line: {
+    width: 0.01,
+    dash: 1,
+    gap: 0.8
+  },
   segmentDetail: 200
 };
 

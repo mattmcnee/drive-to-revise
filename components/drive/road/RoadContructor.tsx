@@ -1,8 +1,9 @@
 import React from "react";
-import { Vector3, CubicBezierCurve3 } from "three";
+import { CubicBezierCurve3 } from "three";
 import RoadSegment from "@/components/drive/road/RoadSegment";
 import { Segment } from "@/components/drive/utils";
 import { CurbSegment } from "./CurbSegment";
+import { LineSegment } from "./LineSegment";
 
 export const RoadContructor = ({ segments }: { segments: Segment[] }) => {
   console.log(segments);
@@ -22,6 +23,7 @@ export const RoadContructor = ({ segments }: { segments: Segment[] }) => {
             <RoadSegment curve={curve} />
             <CurbSegment curve={curve} isLeft={true} />
             <CurbSegment curve={curve} isLeft={false} />
+            <LineSegment curve={curve} />
           </React.Fragment>
         );
       })}
