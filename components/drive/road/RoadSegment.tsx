@@ -1,27 +1,57 @@
 import React, { useRef, useEffect } from "react";
-import { Line } from "@react-three/drei";
-import { CubicBezierCurve3, Vector3 } from "three";
+import { CubicBezierCurve3, Vector3, Mesh, BufferGeometry, MeshStandardMaterial, Float32BufferAttribute } from "three";
+import { config } from "@/components/drive/config";
 
 interface RoadSegmentProps {
   curve: CubicBezierCurve3;
 }
 
 const RoadSegment = ({ curve }: RoadSegmentProps) => {
-  const points: Vector3[] = [];
+  const roadRef = useRef<Mesh<BufferGeometry, any> | null>(null);
 
-  // Generate points along the curve
-  for (let i = 0; i <= 100; i++) {
-    const t = i / 100;
-    points.push(curve.getPoint(t));
-  }
+  useEffect(() => {
+    if (!roadRef.current) return;
 
-  return (
-    <Line
-      points={points}
-      color="grey"
-      lineWidth={1}
-    />
-  );
+    const roadGeometry = new BufferGeometry();
+    const roadVertices: number[] = [];
+    const indices: number[] = [];
+
+    for (let i = 0; i < config.segmentDetail; i++) {
+      const t = i / (config.segmentDetail - 1);
+      const point = curve.getPoint(t);
+      const direction = curve.getTangent(t).normalize();
+      const perpendicular = new Vector3(-direction.z, 0, direction.x);
+
+      const offsetX = perpendicular.x * config.road.width;
+      const offsetY = config.road.height;
+      const offsetZ = perpendicular.z * config.road.width;
+            
+      roadVertices.push(
+        point.x + offsetX, point.y + offsetY, point.z + offsetZ,
+        point.x - offsetX, point.y + offsetY, point.z - offsetZ
+      );
+
+      if (i < config.segmentDetail - 1) {
+        const baseIndex = i * 2;
+        indices.push(
+          baseIndex, baseIndex + 1, baseIndex + 2,
+          baseIndex + 1, baseIndex + 3, baseIndex + 2
+        );
+      }
+    }
+
+    roadGeometry.setAttribute("position", new Float32BufferAttribute(roadVertices, 3));
+    roadGeometry.setIndex(indices);
+    roadGeometry.computeVertexNormals();
+
+    roadRef.current.geometry = roadGeometry;
+    roadRef.current.material = new MeshStandardMaterial({
+      color: "gray",
+      side: 2
+    });
+  }, [curve]);
+
+  return <mesh ref={roadRef} />;
 };
 
 export default RoadSegment;
