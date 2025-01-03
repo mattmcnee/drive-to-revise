@@ -25,6 +25,33 @@ const Vehicle = ({
   const lastTime = useRef(performance.now());
   const { camera } = useThree();
 
+  // Manages left and right lane changes
+  const roadEdge = 2.7;
+  const smoothSpeed = 0.9;
+  const targetOffset = useRef(0);
+  const currentOffset = useRef(0);
+
+  useEffect(() => {
+    const moveVehicleLeft = (isLeft: boolean) => {
+      targetOffset.current = isLeft ? -roadEdge : roadEdge;
+    };
+
+    // Keyboard via arrows or 'wasd'
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "ArrowLeft" || event.key.toLowerCase() === "a") {
+        moveVehicleLeft(true);
+      } else if (event.key === "ArrowRight" || event.key.toLowerCase() === "d") {
+        moveVehicleLeft(false);
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, []);
+
   const getLengthPointAndTangent = (segment: Segment) => {
     const curve = new CubicBezierCurve3(
       segment.points[0],
@@ -42,6 +69,7 @@ const Vehicle = ({
     
   useFrame(() => {
     if (roadData.segments.length > 0 && vehicleRef.current) {
+      currentOffset.current += (targetOffset.current - currentOffset.current) * smoothSpeed * 0.1;
 
       // How much time has passed
       const currentTime = performance.now();
@@ -52,6 +80,9 @@ const Vehicle = ({
       const adjustedSegmentIndex = currentSegmentIndex - roadData.passedSegments;
       const currentSegment = roadData.segments[adjustedSegmentIndex];
       const {length, point, tangent} = getLengthPointAndTangent(currentSegment);
+
+      const offsetVector = new Vector3(-tangent.z, 0, tangent.x).multiplyScalar(currentOffset.current * 0.1);
+      point.add(offsetVector);
 
       // Move to point on curve and rotate to front direction
       vehicleRef.current.position.copy(point);
