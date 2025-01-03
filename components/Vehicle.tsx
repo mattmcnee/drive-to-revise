@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import { useFrame, useThree } from "@react-three/fiber";
 import { useGLTF } from "@react-three/drei";
-import { Mesh, Vector3, CubicBezierCurve3, ObjectLoader } from "three";
+import { Mesh, Vector3, CubicBezierCurve3 } from "three";
 import { RoadData, Segment } from "./drive/utils";
 
 interface VehicleProps {
@@ -10,6 +10,7 @@ interface VehicleProps {
   addRoadSegment: () => void,
   accelerate?: boolean,
   checkQuestion: (questionIndex: number, segmentIndex: number, currentOffset: number) => void,
+  maxSpeed?: number
 }
 
 const Vehicle = ({
@@ -18,13 +19,18 @@ const Vehicle = ({
   addRoadSegment,
   accelerate = false,
   checkQuestion,
+  maxSpeed = 8
 }: VehicleProps) => {
 
-
+  const floorRef = useRef<Mesh>(null);
   const vehicleRef = useRef<Mesh>(null);
+
+  // Tracks position along road
   const [progress, setProgress] = useState(1);
   const [currentSegmentIndex, setCurrentSegmentIndex] = useState(1);
   const lastTime = useRef(performance.now());
+
+
   const { camera } = useThree();
 
   // Manages left and right lane changes
@@ -40,7 +46,7 @@ const Vehicle = ({
   const currentSpeed = useRef(0);
 
   if (accelerate) {
-    targetSpeed.current = 8;
+    targetSpeed.current = maxSpeed;
   } else {
     targetSpeed.current = 0;
   }
@@ -110,6 +116,14 @@ const Vehicle = ({
       vehicleRef.current.position.copy(point);
       vehicleRef.current.rotation.y = Math.atan2(tangent.x, tangent.z);
 
+      // Move the floor to the vehicle position and rotation
+      if (floorRef.current) {
+        floorRef.current.position.copy(vehicleRef.current.position.clone().setY(0));
+        floorRef.current.rotation.copy(vehicleRef.current.rotation);
+        floorRef.current.rotateX(-Math.PI / 2);
+        floorRef.current.translateY(-86);
+      }
+
       // Update camera position and rotation to follow the vehicle if attached
       const offset = new Vector3(0, 0.3, -0.6).applyQuaternion(vehicleRef.current.quaternion);
       camera.position.copy(vehicleRef.current.position.clone().add(offset));
@@ -151,7 +165,11 @@ const Vehicle = ({
       <mesh ref={vehicleRef}  position={[0, 0.1, 0]}>
         <boxGeometry args={[0.3, 0.2, 0.6]} />
         <meshStandardMaterial color="red" />
-      </mesh>   
+      </mesh>
+      <mesh ref={floorRef} rotation={[-Math.PI / 2, 0, 0]} position={[0, 0, 0]}>
+        <planeGeometry args={[200, 200]} />
+        <meshStandardMaterial color="green" />
+      </mesh>
     </>
   );
 };
