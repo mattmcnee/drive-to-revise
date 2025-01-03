@@ -195,12 +195,18 @@ const Vehicle = ({
     }
   });
 
+  const { scene } = useGLTF(`/models/muscle_car/scene.gltf`);
+  const scale = 0.06;
+
   return (
     <>
-      <mesh ref={vehicleRef}  position={[0, 0.1, 0]}>
+      {/* <mesh ref={vehicleRef}  position={[0, 0.1, 0]}>
         <boxGeometry args={[0.3, 0.2, 0.6]} />
         <meshStandardMaterial color="red" />
-      </mesh>
+      </mesh> */}
+      
+      <primitive ref={vehicleRef} object={scene} position={[0, 0.1, 0]} scale={[scale, scale, scale]} />
+           
       <mesh ref={floorRef} rotation={[-Math.PI / 2, 0, 0]} position={[0, 0, 0]}>
         <planeGeometry args={[200, 200]} />
         <meshStandardMaterial color="green" />
