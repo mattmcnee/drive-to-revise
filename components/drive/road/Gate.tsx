@@ -36,7 +36,7 @@ const Gate = ({ index, position, rotation, isMirror }: GateProps) => {
     break;
   }
 
-  if (isMirror) {
+  if (!isMirror) {
     shapes = shapes.reverse();
   }
 

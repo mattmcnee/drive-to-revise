@@ -1,3 +1,41 @@
 .panelContainer{
   z-index: 4;
+
+  .questionHeader {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #fefefe;
+    color: #111;
+    margin-bottom: 12px;
+    padding: 12px;
+    border-radius: 8px;
+  }
+
+  .questionAnswers{
+     display: flex;
+     gap: 12px;
+  }
+
+  .answerBox{
+    display: flex;
+    flex: 1;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    background-color: #fefefe;
+    padding: 12px;
+    border-radius: 8px;
+  }
+
+  .answerText{
+    margin-left: 10px;
+    color: #111;
+  }
+}
+
+@media (max-width: 768px) {
+  .questionAnswers{
+    flex-direction: column;
+  }
 }
