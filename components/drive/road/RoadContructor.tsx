@@ -11,14 +11,12 @@ const RoadContructor = React.memo(({ segments }: { segments: Segment[] }) => {
   return (
     <group>
       {segments.map((segment, index) => {
-        const curve = useMemo(() => {
-          return new CubicBezierCurve3(
-            segment.points[0],
-            segment.points[1],
-            segment.points[2],
-            segment.points[3]
-          );
-        }, [segment.points]);
+        const curve = new CubicBezierCurve3(
+          segment.points[0],
+          segment.points[1],
+          segment.points[2],
+          segment.points[3]
+        );
 
         return (
           <React.Fragment key={index}>
@@ -26,7 +24,7 @@ const RoadContructor = React.memo(({ segments }: { segments: Segment[] }) => {
             <CurbSegment curve={curve} isLeft={true} />
             <CurbSegment curve={curve} isLeft={false} />
             <LineSegment curve={curve} />
-            <TreeSegment curve={curve} index={index} />
+            {index < 3 && <TreeSegment curve={curve} index={index} />}
             {segment.hasGates && <GateSegment curve={curve} segment={segment} />}
           </React.Fragment>
         );
@@ -34,5 +32,7 @@ const RoadContructor = React.memo(({ segments }: { segments: Segment[] }) => {
     </group>
   );
 });
+
+RoadContructor.displayName = "RoadContructor";
 
 export default RoadContructor;

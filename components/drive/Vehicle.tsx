@@ -195,7 +195,7 @@ const Vehicle = ({
     }
   });
 
-  const { scene } = useGLTF(`/models/muscle_car/scene.gltf`);
+  const { scene } = useGLTF("/models/muscle_car/scene.gltf");
   const scale = 0.06;
 
   return (

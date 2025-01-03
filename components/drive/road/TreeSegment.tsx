@@ -50,6 +50,28 @@ export const TreeSegment = ({ curve, index }: TreeSegmentProps) => {
       treeInstance.position.set(treePosition.x, treePosition.y, treePosition.z);
       treeInstance.rotation.y = rotation;
       treeGroup.add(treeInstance);
+
+      // These trees are rendering for the first time
+      if (index === 2) {
+        treeInstance.scale.setScalar(0);
+
+        // Grow new trees over 8 seconds
+        const growAnimation = () => {
+          const startTime = performance.now();
+          const duration = 8000;
+
+          const animate = (time: number) => {
+            const elapsed = time - startTime;
+            const progress = Math.min(elapsed / duration, 1);
+            treeInstance.scale.setScalar(scale * progress);
+            if (progress < 1) {
+              requestAnimationFrame(animate);
+            }
+          };
+          requestAnimationFrame(animate);
+        };
+        growAnimation();
+      }
     }
   }, [curve, index, scene]);
 
