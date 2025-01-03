@@ -65,10 +65,35 @@ const Vehicle = ({
       }
     };
 
+    // Touch events for swiping
+    let touchStartX: number | null = null;
+        
+    const handleTouchStart = (event: TouchEvent) => {
+      touchStartX = event.touches[0].clientX;
+    };
+
+    const handleTouchEnd = (event: TouchEvent) => {
+      if (touchStartX === null) return;
+
+      const touchEndX = event.changedTouches[0].clientX;
+      const deltaX = touchEndX - touchStartX;
+      touchStartX = null;
+
+      if (deltaX > 50) { // Right swipe
+        moveVehicleLeft(false);
+      } else if (deltaX < -50) { // Left swipe 
+        moveVehicleLeft(true);
+      }   
+    };
+    
     window.addEventListener("keydown", handleKeyDown);
+    window.addEventListener("touchstart", handleTouchStart);
+    window.addEventListener("touchend", handleTouchEnd);
     
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
+      window.removeEventListener("touchstart", handleTouchStart);
+      window.removeEventListener("touchend", handleTouchEnd);
     };
   }, []);
 
