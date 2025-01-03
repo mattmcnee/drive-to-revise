@@ -6,10 +6,13 @@ import { Vector3 } from "three";
 import { generateRoadSegment } from "./utils";
 import RoadContructor from "./road/RoadContructor";
 
+import { PrimaryButton } from "@/components/ui/Buttons";
+
 import styles from "./Scene.module.scss";
 
 type Segment = {
   points: Vector3[];
+  endDirection: Vector3;
 };
 
 type RoadData = {
@@ -23,42 +26,67 @@ const Scene = () => {
     lastDirection: new Vector3(),
   });
 
-  const createSegment = (previousEndPoint?: Vector3, previousDirection?: Vector3, lastSegment = false) => {
-    const segment = generateRoadSegment(previousEndPoint, previousDirection);
-    
-    return segment;
+  const createInitialSegment = () => {
+    const segment = generateRoadSegment();
+    setRoadData(prevData => ({
+      segments: [...prevData.segments, segment],
+      lastDirection: segment.endDirection
+    }));
+  };
+
+  const addSegment = () => {
+    setRoadData(prevData => {
+      const lastSegment = prevData.segments[prevData.segments.length - 1];
+      const newSegment = generateRoadSegment(lastSegment.points[3], prevData.lastDirection);
+      
+      return {
+        segments: [...prevData.segments, newSegment],
+        lastDirection: newSegment.endDirection
+      };
+    });
   };
 
   useEffect(() => {
-    const firstSegment = createSegment();
-    const secondSegment = createSegment(firstSegment.points[3], firstSegment.endDirection);
-    const thirdSegment = createSegment(secondSegment.points[3], secondSegment.endDirection, true);
-    setRoadData({
-      segments: [firstSegment, secondSegment, thirdSegment],
-      lastDirection: thirdSegment.endDirection
-    });
+    createInitialSegment();
+    addSegment();
+    addSegment();
+
+    return () => {
+      setRoadData({
+        segments: [],
+        lastDirection: new Vector3()
+      });
+    };
   }, []);
 
   return (
-    <Canvas className={styles.canvas}>
-      <ambientLight intensity={0.5} />
-      <pointLight position={[10, 10, 10]} />
+    <div className={styles.sceneContainer}>
+      <Canvas className={styles.canvas}>
+        <ambientLight intensity={0.5} />
+        <pointLight position={[10, 10, 10]} />
 
-      <mesh position={[0, 0, 0]}>
-        <boxGeometry args={[1, 1, 1]} />
-        <meshStandardMaterial color={"orange"} />
-      </mesh>
+        <mesh position={[0, 0, 0]}>
+          <boxGeometry args={[1, 1, 1]} />
+          <meshStandardMaterial color="orange" />
+        </mesh>
 
-      <RoadContructor segments={roadData.segments} />
+        <RoadContructor segments={roadData.segments} />
 
-      <OrbitControls 
-        enableZoom={true}
-        enablePan={true}
-        enableRotate={true}
-        minDistance={2}
-        maxDistance={50}
-      />
-    </Canvas>
+        <OrbitControls 
+          enableZoom={true}
+          enablePan={true}
+          enableRotate={true}
+          minDistance={2}
+          maxDistance={50}
+        />
+      </Canvas>
+
+      <div className={styles.sceneOverlay}>
+        <PrimaryButton onClick={addSegment}>
+          Add Segment
+        </PrimaryButton>
+      </div>
+    </div>
   );
 };
 

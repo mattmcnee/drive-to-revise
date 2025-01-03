@@ -2,3 +2,11 @@
   height: 100vh !important;
   width: 100vw !important;
 }
+
+.sceneOverlay{
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 20px;
+}

@@ -4,6 +4,8 @@ import RoadSegment from "@/components/drive/road/RoadSegment";
 import { Segment } from "@/components/drive/utils";
 
 export const RoadContructor = ({ segments }: { segments: Segment[] }) => {
+  console.log(segments);
+  
   return (
     <group>
       {segments.map((segment, index) => {
