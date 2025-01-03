@@ -1,9 +1,19 @@
-import exp from "constants";
 import { Vector3, Shape } from "three";
+
+export type Question = {
+  dummy: string;
+  answer: string;
+  id: number;
+  question: string;
+  isMirror: boolean;
+  answerLeft: boolean;
+};
 
 export type Segment = {
   points: Vector3[];
   endDirection?: Vector3;
+  hasGates?: boolean;
+  questions?: Question[];
 };
 
 export type RoadData = {
@@ -36,7 +46,7 @@ export const config = {
   segmentDetail: 200
 };
 
-export const generateRoadSegment = (previousEndPoint?: Vector3, previousDirection?: Vector3) => {
+export const generateRoadSegment = (previousEndPoint?: Vector3, previousDirection?: Vector3, hasGates = false): Segment => {
   const controlPoints: Vector3[] = [];
   const startPoint = previousEndPoint || new Vector3(0, 0, 0);
   const prevDir = previousDirection || new Vector3(0, 0, -1);
@@ -62,7 +72,9 @@ export const generateRoadSegment = (previousEndPoint?: Vector3, previousDirectio
 
   return {
     points: controlPoints,
-    endDirection: lastDirection
+    endDirection: lastDirection,
+    hasGates: hasGates,
+    questions: []
   };
 };
 

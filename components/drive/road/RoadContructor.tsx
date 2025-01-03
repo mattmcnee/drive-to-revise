@@ -25,8 +25,8 @@ export const RoadContructor = ({ segments }: { segments: Segment[] }) => {
             <RoadSegment curve={curve} />
             <CurbSegment curve={curve} isLeft={true} />
             <CurbSegment curve={curve} isLeft={false} />
-            <GateSegment curve={curve} />
             <LineSegment curve={curve} />
+            {segment.hasGates && <GateSegment curve={curve} segment={segment} />}
           </React.Fragment>
         );
       })}

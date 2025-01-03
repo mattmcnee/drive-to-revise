@@ -7,9 +7,10 @@ interface GateProps {
   position: Vector3
   rotation: Vector3
   index: number
+  isMirror: boolean
 }
 
-const Gate = ({ index, position, rotation }: GateProps) => {
+const Gate = ({ index, position, rotation, isMirror }: GateProps) => {
   const gateGroup = useRef<Group>(null);
 
   useEffect(() => {
@@ -35,7 +36,9 @@ const Gate = ({ index, position, rotation }: GateProps) => {
     break;
   }
 
-  
+  if (isMirror) {
+    shapes = shapes.reverse();
+  }
 
   return (
     <group ref={gateGroup}>

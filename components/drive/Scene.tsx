@@ -13,7 +13,10 @@ import styles from "./Scene.module.scss";
 import { RoadData } from "@/components/drive/utils";
 import Vehicle from "../Vehicle";
 
+import questions from "./questions.json";
+
 const Scene = () => {
+  const liveQuestions = useRef(questions.map(q => ({ ...q, uses: 0 })));
   const [roadData, setRoadData] = useState<RoadData>({
     segments: [],
     lastDirection: new Vector3(),
@@ -24,19 +27,34 @@ const Scene = () => {
     const segment = generateRoadSegment();
     setRoadData(prevData => ({
       segments: [...prevData.segments, segment],
-      lastDirection: segment.endDirection,
+      lastDirection: segment.endDirection || new Vector3(),
       passedSegments: 0
     }));
   };
 
-  const addSegment = () => {
+  const addSegment = (hasGates = true) => {
     setRoadData(prevData => {
       const lastSegment = prevData.segments[prevData.segments.length - 1];
-      const newSegment = generateRoadSegment(lastSegment.points[3], prevData.lastDirection);
-      
+      let questions;
+
+      const newSegment = generateRoadSegment(lastSegment.points[3], prevData.lastDirection, hasGates);
+      let questionSegment;
+
+      if (hasGates) {
+        questions = Array.from({ length: 3 }, () => getNextQuestionData());
+        questionSegment = {
+          ...newSegment,
+          questions
+        }
+      } else {
+        questionSegment = newSegment;
+      }
+
+      console.log(questionSegment);
+
       return {
-        segments: [...prevData.segments, newSegment],
-        lastDirection: newSegment.endDirection,
+        segments: [...prevData.segments, questionSegment],
+        lastDirection: questionSegment.endDirection || new Vector3(),
         passedSegments: prevData.passedSegments
       };
     });
@@ -54,9 +72,27 @@ const Scene = () => {
     });
   };
 
+  const getNextQuestionData = () => {
+    const minUses = Math.min(...liveQuestions.current.map(q => q.uses));
+    const candidates = liveQuestions.current.filter(q => q.uses === minUses);
+    const randomIndex = Math.floor(Math.random() * candidates.length);
+    const selectedQuestion = candidates[randomIndex];
+
+    liveQuestions.current = liveQuestions.current.map(q =>
+      q.id === selectedQuestion.id ? { ...q, uses: q.uses + 1 } : q
+    );
+
+    return {
+      ...selectedQuestion,
+      isMirror: Math.random() > 0.5,
+      answerLeft: Math.random() > 0.5
+    };
+  };
+
+  // Initialize the road with 3 segments; cleanup when unmounting
   useEffect(() => {
     createInitialSegment();
-    addSegment();
+    addSegment(false);
     addSegment();
 
     return () => {

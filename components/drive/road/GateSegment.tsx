@@ -1,12 +1,14 @@
 import React, { useRef, useEffect } from "react";
 import { Vector3, CubicBezierCurve3 } from "three";
 import Gate from "@/components/drive/road/Gate";
+import { Segment } from "@/components/drive/utils";
 
 interface GateSegmentProps {
-    curve: CubicBezierCurve3
+  curve: CubicBezierCurve3
+  segment: Segment
 }
 
-export const GateSegment = ({ curve }: GateSegmentProps) => {
+export const GateSegment = ({ curve, segment }: GateSegmentProps) => {
   // Calculate positions along the curve
   const oneThird = curve.getPoint(1 / 3);
   const twoThirds = curve.getPoint(2 / 3);
@@ -24,14 +26,17 @@ export const GateSegment = ({ curve }: GateSegmentProps) => {
     const angle = Math.acos(up.dot(tangent));
     
     return new Vector3(axis.x, axis.y, axis.z).multiplyScalar(angle);
-  };      
+  };    
+  
+  const mirrorArray = segment.questions?.map((question) => question.isMirror) || [false, false, false];
+  console.log(mirrorArray);
 
   // Render gates at 1/3, 2/3, and end of the curve
   return (
     <group>
-      <Gate index={0} position={oneThird} rotation={getRotation(tangentOneThird)} />
-      <Gate index={1} position={twoThirds} rotation={getRotation(tangentTwoThirds)} />
-      <Gate index={2} position={end} rotation={getRotation(tangentEnd)} />
+      <Gate index={0} isMirror={mirrorArray[0]} position={oneThird} rotation={getRotation(tangentOneThird)} />
+      <Gate index={1} isMirror={mirrorArray[1]} position={twoThirds} rotation={getRotation(tangentTwoThirds)} />
+      <Gate index={2} isMirror={mirrorArray[2]} position={end} rotation={getRotation(tangentEnd)} />
     </group>
   );
 };

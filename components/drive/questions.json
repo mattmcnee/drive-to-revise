@@ -1,0 +1,65 @@
+[
+  {
+    "question": "Does not allow light through",
+    "dummy": "shiny",
+    "id": 1709822256969,
+    "order": 0,
+    "answer": "opaque"
+  },
+  {
+    "question": "Radiant light power per unit area and solid angle at a specific wavelength",
+    "dummy": "Luminous intensity",
+    "id": 1709822256970,
+    "order": 1,
+    "answer": "spectral radiance"
+  },
+  {
+    "question": "Models reflection as ratio of incoming to outgoing light",
+    "dummy": "unidirectional reflectance distribution function",
+    "id": 1709822256971,
+    "order": 2,
+    "answer": "bidirectional reflectance distribution function"
+  },
+  {
+    "question": "Light intensity decrease with oblique angles",
+    "dummy": "angle reduction coefficient",
+    "id": 1709822256972,
+    "order": 3,
+    "answer": "weakening factor"
+  },
+  {
+    "answer": "Reflection properties",
+    "dummy": "Transmission properties",
+    "id": 1709822256973,
+    "order": 4,
+    "question": "What does the BRDF model?"
+  },
+  {
+    "answer": "Model light decrease at oblique angles",
+    "dummy": "Estimate refraction index of the medium",
+    "id": 1709822256974,
+    "order": 5,
+    "question": "What is the purpose of the Lambert's cosine law in the equation?"
+  },
+  {
+    "answer": "Monte Carlo, FEM",
+    "dummy": "Finite Difference Method",
+    "id": 1709822256975,
+    "order": 6,
+    "question": "What are some numerical methods used to solve the rendering equation?"
+  },
+  {
+    "answer": "Solid angle measurement",
+    "dummy": "Measuring the brightness of a light source",
+    "id": 1709822256976,
+    "order": 7,
+    "question": "What is the stereadian unit used for?"
+  },
+  {
+    "answer": "Light scattering through transmission",
+    "dummy": "Sound absorption through reflection",
+    "id": 1709822256977,
+    "order": 8,
+    "question": "What does the BTDF model?"
+  }
+]
