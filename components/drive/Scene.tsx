@@ -2,16 +2,15 @@ import React, { useRef, useState, useEffect } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
 import { OrbitControls, Sky } from "@react-three/drei";
 import { Vector3 } from "three";
-
-import { generateRoadSegment } from "./utils";
 import RoadContructor from "./road/RoadContructor";
 
 import { PrimaryButton } from "@/components/ui/Buttons";
 
 import styles from "./Scene.module.scss";
 
-import { RoadData } from "@/components/drive/utils";
+import { RoadData, GameState, generateRoadSegment } from "@/components/drive/utils";
 import Vehicle from "../Vehicle";
+import ScenePanel from "./ScenePanel";
 
 import questions from "./questions.json";
 
@@ -22,6 +21,15 @@ const Scene = () => {
     lastDirection: new Vector3(),
     passedSegments: 0
   });
+
+  const [gameState, setGameState] = useState<GameState>(
+    {
+      started: false,
+      questionFailed: null,
+      displayedQuestion: null,
+      accelerateVehicle: false
+    }
+  );
 
   const createInitialSegment = () => {
     const segment = generateRoadSegment();
@@ -89,6 +97,15 @@ const Scene = () => {
     };
   };
 
+  const startGame = () => {
+    setGameState({
+      started: true,
+      questionFailed: null,
+      displayedQuestion: null,
+      accelerateVehicle: true
+    });
+  }
+
   // Initialize the road with 3 segments; cleanup when unmounting
   useEffect(() => {
     createInitialSegment();
@@ -112,7 +129,7 @@ const Scene = () => {
         <directionalLight position={[5, 10, 7.5]} intensity={0.9} />
         <Sky distance={450000} sunPosition={[100, 10, -100]} inclination={0.9} azimuth={0.65}/>
 
-        <Vehicle roadData={roadData} removePassedSegment={removePassedSegment} addRoadSegment={addSegment} />
+        <Vehicle roadData={roadData} removePassedSegment={removePassedSegment} addRoadSegment={addSegment} accelerate={gameState.accelerateVehicle}/>
 
         <RoadContructor segments={roadData.segments} />
 
@@ -126,6 +143,7 @@ const Scene = () => {
       </Canvas>
 
       <div className={styles.sceneOverlay}>
+        <ScenePanel gameState={gameState} startGame={startGame} />
       </div>
     </div>
   );

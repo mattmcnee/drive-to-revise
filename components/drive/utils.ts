@@ -22,6 +22,13 @@ export type RoadData = {
   passedSegments: number;
 };
 
+export type GameState = {
+  started: boolean;
+  questionFailed: Question | null;
+  displayedQuestion: Question | null;
+  accelerateVehicle: boolean;
+}
+
 export const config = {
   road: {
     width: 0.5,

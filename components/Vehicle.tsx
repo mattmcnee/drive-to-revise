@@ -8,14 +8,14 @@ interface VehicleProps {
   roadData: RoadData,
   removePassedSegment: () => void,
   addRoadSegment: () => void,
-  speed?: number
+  accelerate?: boolean
 }
 
 const Vehicle = ({
   roadData,
   removePassedSegment,
   addRoadSegment,
-  speed = 4.4
+  accelerate = false
 }: VehicleProps) => {
 
 
@@ -30,6 +30,14 @@ const Vehicle = ({
   const smoothSpeed = 0.9;
   const targetOffset = useRef(0);
   const currentOffset = useRef(0);
+
+  let speed = 0;
+
+  if (accelerate) {
+    speed = 4.4;
+  } else {
+    speed = 0;
+  }
 
   useEffect(() => {
     const moveVehicleLeft = (isLeft: boolean) => {
