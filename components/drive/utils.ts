@@ -16,6 +16,11 @@ export const config = {
     width: 0.5,
     height: 0.001
   },
+  curb: {
+    rise: 0.01,
+    width: 0.03,
+    drop: 0.02
+  },
   segmentDetail: 200
 };
 

@@ -45,6 +45,7 @@ const Scene = () => {
   const removePassedSegment = () => {
     setRoadData((prevData) => {
       const newSegments = prevData.segments.slice(1);
+      
       return {
         segments: newSegments,
         lastDirection: prevData.lastDirection,
