@@ -8,14 +8,16 @@ interface VehicleProps {
   roadData: RoadData,
   removePassedSegment: () => void,
   addRoadSegment: () => void,
-  accelerate?: boolean
+  accelerate?: boolean,
+  checkQuestion: (questionIndex: number, segmentIndex: number, currentOffset: number) => void,
 }
 
 const Vehicle = ({
   roadData,
   removePassedSegment,
   addRoadSegment,
-  accelerate = false
+  accelerate = false,
+  checkQuestion,
 }: VehicleProps) => {
 
 
@@ -74,6 +76,10 @@ const Vehicle = ({
 
     return { length, point, tangent };
   };
+
+  const handleGatesPass = (questionIndex: number, segment: Segment, segmentIndex: number) => {
+    checkQuestion(questionIndex, segmentIndex, currentOffset.current);
+  };
     
   useFrame(() => {
     if (roadData.segments.length > 0 && vehicleRef.current) {
@@ -104,6 +110,7 @@ const Vehicle = ({
       setProgress((prev) => {
         const newProgress = prev + (speed * deltaTime) / length;
         if (newProgress >= 1) {
+          handleGatesPass(2, currentSegment, adjustedSegmentIndex);
           if (adjustedSegmentIndex < roadData.segments.length - 1) {
             setCurrentSegmentIndex(currentSegmentIndex + 1);
             addRoadSegment();
@@ -117,7 +124,14 @@ const Vehicle = ({
             
             return 1;
           }
-        } 
+        } else {
+          if (prev < 1 / 3 && newProgress >= 1 / 3) {
+            handleGatesPass(0, currentSegment, adjustedSegmentIndex);
+          }
+          if (prev < 2 / 3 && newProgress >= 2 / 3) {
+            handleGatesPass(1, currentSegment, adjustedSegmentIndex);
+          }
+        }
         
         return newProgress;
       });

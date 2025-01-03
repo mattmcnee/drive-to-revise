@@ -9,6 +9,12 @@ export type Question = {
   answerLeft: boolean;
 };
 
+export type QuestionUi = {
+  question: string;
+  left: { icon: string; text: string };
+  right: { icon: string; text: string };
+};
+
 export type Segment = {
   points: Vector3[];
   endDirection?: Vector3;
@@ -25,7 +31,7 @@ export type RoadData = {
 export type GameState = {
   started: boolean;
   questionFailed: Question | null;
-  displayedQuestion: Question | null;
+  displayedQuestion: QuestionUi | null;
   accelerateVehicle: boolean;
 }
 
@@ -83,6 +89,70 @@ export const generateRoadSegment = (previousEndPoint?: Vector3, previousDirectio
     hasGates: hasGates,
     questions: []
   };
+};
+
+export const createQuestionUI = (currentQuestion: Question, questionIndex: number) => {
+  const newQuestion = {
+    question: currentQuestion.question,
+    left: { icon: "", text: "" },
+    right: { icon: "", text: "" }
+  };
+
+  // Set left and right text based on the answerLeft property
+  if (currentQuestion.answerLeft) {
+    newQuestion.left.text = currentQuestion.answer;
+    newQuestion.right.text = currentQuestion.dummy;
+  } else {
+    newQuestion.left.text = currentQuestion.dummy;
+    newQuestion.right.text = currentQuestion.answer;
+  }
+
+  // Set icons based on questionIndex and isMirror property
+  const iconSets = [
+    { normal: ["hexagon", "triangle"], mirror: ["triangle", "hexagon"] },
+    { normal: ["square", "circle"], mirror: ["circle", "square"] },
+    { normal: ["pentagon", "diamond"], mirror: ["diamond", "pentagon"] },
+  ];
+
+  if (questionIndex >= 0 && questionIndex < iconSets.length) {
+    const icons = currentQuestion.isMirror
+      ? iconSets[questionIndex].mirror
+      : iconSets[questionIndex].normal;
+    newQuestion.left.icon = icons[0];
+    newQuestion.right.icon = icons[1];
+  }
+
+  return newQuestion;
+};
+
+export const getNextSegmentsFirstQuestion = (segmentIndex: number, roadData: RoadData) => {
+  if (segmentIndex + 1 < roadData.segments.length) {
+    const nextSegment = roadData.segments[segmentIndex + 1];
+    if (!nextSegment.hasGates) {
+      getNextSegmentsFirstQuestion(segmentIndex + 1, roadData);
+    }
+    if (nextSegment.questions) {
+      const nextQuestion = nextSegment.questions[0];
+      if (nextQuestion) {
+        return createQuestionUI(nextQuestion, 0);
+      }
+    }
+  }
+  
+  return null;
+};
+
+export const getNextQuestion = (questionIndex: number, segmentIndex: number, roadData: RoadData) => {
+  const currentQuestions = roadData.segments[segmentIndex].questions;
+  if (currentQuestions && questionIndex + 1 < currentQuestions.length) {
+    const nextQuestion = currentQuestions[questionIndex + 1];
+    console.log("Next question", nextQuestion);
+    if (nextQuestion) {
+      return createQuestionUI(nextQuestion, questionIndex + 1);
+    }
+  } else {
+    return getNextSegmentsFirstQuestion(segmentIndex, roadData);
+  }
 };
 
 export const getHexagonShape = (size: number) => {

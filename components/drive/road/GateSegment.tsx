@@ -29,7 +29,6 @@ export const GateSegment = ({ curve, segment }: GateSegmentProps) => {
   };    
   
   const mirrorArray = segment.questions?.map((question) => question.isMirror) || [false, false, false];
-  console.log(mirrorArray);
 
   // Render gates at 1/3, 2/3, and end of the curve
   return (

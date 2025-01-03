@@ -9,10 +9,21 @@ interface ScenePanelProps {
 }
 
 const ScenePanel = ({ gameState, startGame }: ScenePanelProps) => {
+  const question = gameState.displayedQuestion || {question: "", left: {text: "", icon: ""}, right: {text: "", icon: ""}};
+  
   return (
     <div className={styles.panelContainer}>
       {!gameState.started && (
         <PrimaryButton onClick={startGame}>Start Game</PrimaryButton>
+      )}
+      <div className={styles.questionContainer}>
+        <h3>{question.question}</h3>
+        <span>{question.left.text}</span>
+        <span>{question.right.text}</span>
+
+      </div>
+      {gameState.questionFailed && (
+        <PrimaryButton onClick={startGame}>Try Again</PrimaryButton>
       )}
     </div>
   );
