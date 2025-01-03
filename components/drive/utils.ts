@@ -8,6 +8,7 @@ export type Segment = {
 export type RoadData = {
   segments: Segment[];
   lastDirection: Vector3;
+  passedSegments: number;
 };
 
 export const config = {

@@ -16,13 +16,15 @@ const Scene = () => {
   const [roadData, setRoadData] = useState<RoadData>({
     segments: [],
     lastDirection: new Vector3(),
+    passedSegments: 0
   });
 
   const createInitialSegment = () => {
     const segment = generateRoadSegment();
     setRoadData(prevData => ({
       segments: [...prevData.segments, segment],
-      lastDirection: segment.endDirection
+      lastDirection: segment.endDirection,
+      passedSegments: 0
     }));
   };
 
@@ -33,7 +35,19 @@ const Scene = () => {
       
       return {
         segments: [...prevData.segments, newSegment],
-        lastDirection: newSegment.endDirection
+        lastDirection: newSegment.endDirection,
+        passedSegments: prevData.passedSegments
+      };
+    });
+  };
+
+  const removePassedSegment = () => {
+    setRoadData((prevData) => {
+      const newSegments = prevData.segments.slice(1);
+      return {
+        segments: newSegments,
+        lastDirection: prevData.lastDirection,
+        passedSegments: prevData.passedSegments + 1
       };
     });
   };
@@ -46,7 +60,8 @@ const Scene = () => {
     return () => {
       setRoadData({
         segments: [],
-        lastDirection: new Vector3()
+        lastDirection: new Vector3(),
+        passedSegments: 0
       });
     };
   }, []);
