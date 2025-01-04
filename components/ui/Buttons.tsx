@@ -67,3 +67,36 @@ export const TertiaryIconButton = ({ onClick, children, type = "button", disable
     {children}
   </BaseButton>
 );
+
+interface LinkProps {
+  href: string;
+  children: ReactNode;
+  className?: string;
+}
+
+interface BaseLinkProps extends LinkProps {
+  baseClassName: string;
+}
+
+// We have BaseLinks as buttons can't be used in server side rendering
+const BaseLink = ({ baseClassName, className = "", href, children }: BaseLinkProps) => (
+  <Link 
+    href={href}
+    className={`${styles.btn} ${styles[baseClassName]} ${className}`}
+  >
+    {children}
+  </Link>
+);
+
+export const PrimaryLink = ({ href, children, className = "" }: LinkProps) => (
+  <BaseLink baseClassName="btn-primary" className={className} href={href}>
+    {children}
+  </BaseLink>
+);
+
+export const SecondaryLink = ({ href, children, className = "" }: LinkProps) => (
+  <BaseLink baseClassName="btn-secondary" className={className} href={href}>
+    {children}
+  </BaseLink>
+);
+
