@@ -2,7 +2,7 @@ import React, { useReducer } from "react";
 import { toast } from "react-toastify";
 import { reducer, initialState, UploadContext } from "./UploadContext";
 import { useAuth } from "@/firebase/useAuth";
-import { getChunkedDataAsync } from "@/components/upload/utils";
+import { getChunkedDataAsync, getBatchedChunks, getQuestionsAndEmbeddingsAsync } from "@/components/upload/utils";
 
 // Provider Component
 interface UploadProviderProps {
@@ -33,12 +33,25 @@ export const UploadProvider = ({ children }: UploadProviderProps) => {
       return;
     }
 
+    const batchSize = 4;
     for (let i = 0; i < documents.length; i++) {
       const document = documents[i];
 
       const chunks = await getChunkedDataAsync(document);
 
-      console.log(chunks);
+      const batchedChunks = getBatchedChunks(chunks, batchSize);
+
+      for (let j = 0; j < batchedChunks.length; j++) {
+        const { questions, embeddings } = await getQuestionsAndEmbeddingsAsync(batchedChunks[j]);
+        console.log(questions);
+        console.log(embeddings);
+        // dispatch({ type: "ADD_EMBEDDINGS", payload: embeddings });
+        // dispatch({ type: "ADD_QUESTIONS", payload: questions });
+      }
+
+
+
+      console.log(batchedChunks);
     }
 
 
