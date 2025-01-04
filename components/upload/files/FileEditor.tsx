@@ -9,6 +9,7 @@ import { useUploadContext } from "../UploadContext";
 import { TertiaryButton } from "@/components/ui/Buttons";
 
 import Image from "next/image";
+import mammoth from "mammoth";
 
 interface FileEditorProps {
     index: number;
@@ -41,7 +42,20 @@ const FileEditor = ({ index }: FileEditorProps) => {
     const file = (event.target as HTMLInputElement).files?.[0];
     if (file) {
       const reader = new FileReader();
-      if (file.type === TXT_TYPE) {
+      if (file.type === DOCX_TYPE) {
+        // Handle `.docx` file
+        reader.onload = async (e) => {
+          const arrayBuffer = e.target?.result as ArrayBuffer;
+          try {
+            const result = await mammoth.extractRawText({ arrayBuffer });
+            updateTextValue(result.value);
+          } catch (error) {
+            console.error("Error reading .docx file:", error);
+            toast.error("Error reading .docx file");
+          }
+        };
+        reader.readAsArrayBuffer(file);
+      } else if (file.type === TXT_TYPE) {
         // Handle `.txt` file
         reader.onload = (e) => {
           const text = e.target?.result as string;
