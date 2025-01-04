@@ -1,6 +1,7 @@
 import { useUploadContext } from "./UploadContext";
 import { useAuth } from "@/firebase/useAuth";
 import FileSlider from "@/components/upload/files/FileSlider";
+import GeneratedQuestions from "@/components/upload/questions/GeneratedQuestions";
 
 const DatasetUpload = () => {
   const { state, generateEmbeddings } = useUploadContext();
@@ -10,12 +11,11 @@ const DatasetUpload = () => {
     return (<div>Loading...</div>);
   }
 
-  return (
-    <div>
-      {/* {JSON.stringify(state)} */}
-      <FileSlider />
-    </div>
-  );
+  if (state.status === "generating" || state.status === "review" || state.status === "submitted") {
+    return (<GeneratedQuestions />);
+  } else {
+    return (<FileSlider />)
+  }
 };
 
 export default DatasetUpload;

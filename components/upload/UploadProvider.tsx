@@ -13,15 +13,6 @@ export const UploadProvider = ({ children }: UploadProviderProps) => {
   const [state, dispatch] = useReducer(reducer, initialState);
   const { user } = useAuth();
 
-  const getNumOfQuestions = () => {
-    let count = 0;
-    state.embeddings.forEach(item => {
-      count += item.questions.length;
-    });
-    
-    return count;
-  };
-
   const generateEmbeddings = async () => {
     dispatch({ type: "SET_UPLOAD_STATUS", payload: "generating" });
 
@@ -33,35 +24,31 @@ export const UploadProvider = ({ children }: UploadProviderProps) => {
       return;
     }
 
-    const batchSize = 4;
+    
+    // Process each document individually
     for (let i = 0; i < documents.length; i++) {
       const document = documents[i];
 
+      // Split the document into chunks
       const chunks = await getChunkedDataAsync(document);
 
+      // Split these chunks into batches for concurrent processing
+      const batchSize = 4;
       const batchedChunks = getBatchedChunks(chunks, batchSize);
 
+      // Process each batch
       for (let j = 0; j < batchedChunks.length; j++) {
         const { questions, embeddings } = await getQuestionsAndEmbeddingsAsync(batchedChunks[j]);
-        console.log(questions);
-        console.log(embeddings);
-        // dispatch({ type: "ADD_EMBEDDINGS", payload: embeddings });
-        // dispatch({ type: "ADD_QUESTIONS", payload: questions });
+        dispatch({ type: "ADD_EMBEDDINGS", payload: embeddings });
+        dispatch({ type: "ADD_QUESTIONS", payload: questions });
       }
-
-
-
-      console.log(batchedChunks);
     }
 
-
-    setTimeout(() => {
-      dispatch({ type: "SET_UPLOAD_STATUS", payload: "review" });
-    }, 1000);
+    dispatch({ type: "SET_UPLOAD_STATUS", payload: "review" });
   };
 
   return (
-    <UploadContext.Provider value={{ state, dispatch, generateEmbeddings, getNumOfQuestions }}>
+    <UploadContext.Provider value={{ state, dispatch, generateEmbeddings }}>
       {children}
     </UploadContext.Provider>
   );

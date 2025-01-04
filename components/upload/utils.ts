@@ -17,13 +17,13 @@ export interface Section {
   questions: Question[];
 }
 
-interface TextEmbedding {
+export interface TextEmbedding {
   text: string;
   embedding: string;
 }
 
 const questionGenerationInstructions = "You generate questions with an answer and a dummy (incorrect) answer. Your output MUST ALWAYS be a JSON array.";
-const questionGenerationPrompt = `Output UP TO six questions designed to teach the provided content. Return fewer than six if there is insufficient content or [] if no relevant questions can be generated.
+const questionGenerationPrompt = `Output UP TO four questions designed to teach the provided content. Return fewer than four if there is insufficient content or [] if no relevant questions can be generated.
 DO NOT rely on references to anything in the provided text. The questions must be answerable without the text.
 Dummy answers must be INCORRECT for the question or statement. Consider more general contexts. They MUST be INCORRECT in ALL contexts.
 Half of the questions must be Format A and half of them must be Format B.

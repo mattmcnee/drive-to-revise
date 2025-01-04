@@ -1,10 +1,11 @@
 
 import React, { createContext, useContext, useReducer, Dispatch } from "react";
-import { Section } from "@/components/upload/utils";
+import { Section, TextEmbedding, Question } from "@/components/upload/utils";
 
 export interface UploadData {
     documents: string[];
-    embeddings: Section[];
+    embeddings: TextEmbedding[];
+    questions: Question[];
     status: string;
     metadata: {
         iconShape: string;
@@ -23,6 +24,7 @@ const randomShape = () => {
 export const initialState: UploadData = {
   documents: [""],
   embeddings: [],
+  questions: [],
   status: "upload",
   metadata: {
     iconShape: randomShape(),
@@ -35,7 +37,9 @@ export const initialState: UploadData = {
 export type UploadAction = 
   { type: "ADD_DOCUMENT"; payload: string }
 | { type: "SET_DOCUMENT_TEXT"; payload: { index: number; text: string } }
-| { type: "SET_UPLOAD_STATUS"; payload: string };
+| { type: "SET_UPLOAD_STATUS"; payload: string }
+| { type: "ADD_EMBEDDINGS"; payload: TextEmbedding[] }
+| { type: "ADD_QUESTIONS"; payload: Question[] };
 
 // Updates the state based on the action dispatched
 export const reducer = (data: UploadData, action: UploadAction): UploadData => {
@@ -56,6 +60,14 @@ export const reducer = (data: UploadData, action: UploadAction): UploadData => {
     // Generate embeddings and questions from the uploaded documents
   case "SET_UPLOAD_STATUS":
     return { ...data, status: action.payload };
+
+    // Add embeddings to the .embeddings array
+  case "ADD_EMBEDDINGS":
+    return { ...data, embeddings: [...data.embeddings, ...action.payload] };
+
+    // Add questions to the .questions array
+  case "ADD_QUESTIONS":
+    return { ...data, questions: [...data.questions, ...action.payload] };
     
   default:
     return data;
@@ -67,7 +79,6 @@ interface UploadContextType {
     state: UploadData;
     dispatch: Dispatch<UploadAction>;
     generateEmbeddings: () => void;
-    getNumOfQuestions: () => number;
 }
 
 export const UploadContext = createContext<UploadContextType | undefined>(undefined);
