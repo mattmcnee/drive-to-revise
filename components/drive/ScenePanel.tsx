@@ -4,12 +4,12 @@ import styles from "./ScenePanel.module.scss";
 import { GameState } from "@/components/drive/utils";
 import Image from "next/image";
 
-import circleIcon from "@/assets/circle.svg";
-import squareIcon from "@/assets/square.svg";
-import triangleIcon from "@/assets/triangle.svg";
-import diamondIcon from "@/assets/diamond.svg";
-import pentagonIcon from "@/assets/pentagon.svg";
-import hexagonIcon from "@/assets/hexagon.svg";
+import circleIcon from "@/public/icons/shapes/circle.svg";
+import squareIcon from "@/public/icons/shapes/square.svg";
+import triangleIcon from "@/public/icons/shapes/triangle.svg";
+import diamondIcon from "@/public/icons/shapes/diamond.svg";
+import pentagonIcon from "@/public/icons/shapes/pentagon.svg";
+import hexagonIcon from "@/public/icons/shapes/hexagon.svg";
 
 const iconMap: { [key: string]: string } = {
   circle: circleIcon,
