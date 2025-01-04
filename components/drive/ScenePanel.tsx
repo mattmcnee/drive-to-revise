@@ -26,7 +26,7 @@ interface ScenePanelProps {
 }
 
 const ScenePanel = ({ gameState, startGame }: ScenePanelProps) => {
-  const question = gameState.displayedQuestion || {question: "", left: {text: "", icon: ""}, right: {text: "", icon: ""}};
+  const question = gameState.displayedQuestion || {question: "", left: {text: "", icon: "hexagon"}, right: {text: "", icon: "hexagon"}};
   
   return (
     <div className={styles.panelContainer}>

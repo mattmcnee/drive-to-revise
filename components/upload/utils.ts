@@ -6,7 +6,7 @@ export interface Question {
   answer: string;
   question: string;
   dummy: string;
-  source?: string;
+  id?: string;
 }
 
 export interface Section {
@@ -46,6 +46,15 @@ Answers MUST BE less than 5 words and MUST BE less than 5 mathematical symbols. 
  
 Here is the target content:\n\n`;
 
+const generateNewId = (length = 20) => {
+  const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+  let result = "";
+  for (let i = 0; i < length; i++) {
+    const randomIndex = Math.floor(Math.random() * characters.length);
+    result += characters[randomIndex];
+  }
+  return result;
+};
 
 export const getChunkedDataAsync = async (text: string, chunkSize = 512, chunkOverlap = 128) => {
   const splitter = new RecursiveCharacterTextSplitter({
@@ -114,9 +123,14 @@ export const getGeneratedQuestionAsync = async (text: string) => {
       }
     );
 
-    let questions = response.data.message.replace(/^```(?:json)?\n|\n```$/g, "").trim();
-    
-    return JSON.parse(questions);
+    const message = response.data.message;
+    const questions = JSON.parse(message.replace(/^```(?:json)?\n|\n```$/g, "").trim());
+
+    questions.forEach((question: Question) => {
+      question.id = generateNewId();
+    });
+
+    return questions;
   } catch (error) {
     console.error("Error fetching chat completion:", error);
     toast.error("Failed to fetch questions");

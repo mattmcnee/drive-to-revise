@@ -3,7 +3,7 @@ import { Vector3, Shape } from "three";
 export type Question = {
   dummy: string;
   answer: string;
-  id: number;
+  id: string;
   question: string;
   isMirror: boolean;
   answerLeft: boolean;

@@ -1,10 +1,11 @@
-import React, { useRef, useState, useEffect, useCallback } from "react";
+import React, { useRef, useState, useEffect, useCallback, use } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
 import { OrbitControls, Sky } from "@react-three/drei";
 import { Vector3 } from "three";
 import RoadContructor from "./road/RoadContructor";
 
 import { PrimaryButton } from "@/components/ui/Buttons";
+import { DatasetDocument } from "@/firebase/firestoreInterface";
 
 import styles from "./Scene.module.scss";
 
@@ -14,8 +15,20 @@ import ScenePanel from "./ScenePanel";
 
 import questions from "./questions.json";
 
-const Scene = () => {
-  const liveQuestions = useRef(questions.map(q => ({ ...q, uses: 0 })));
+interface SceneProps {
+  inputData: DatasetDocument;
+}
+
+interface LiveQuestion {
+  question: string;
+  answer: string;
+  dummy: string;
+  uses: number;
+  id: string;
+}
+
+const Scene = ({ inputData }: SceneProps) => {
+  const liveQuestions = useRef<LiveQuestion[]>([]);
   const [roadData, setRoadData] = useState<RoadData>({
     segments: [],
     lastDirection: new Vector3(),
@@ -147,9 +160,21 @@ const Scene = () => {
 
   // Initialize the road with 3 segments; cleanup when unmounting
   useEffect(() => {
+    if (inputData.questions.length > 0) {
+      liveQuestions.current = inputData.questions.map(q => ({
+        uses: 0,
+        answer: q.answer,
+        dummy: q.dummy,
+        question: q.question,
+        id: q.id
+      }));
+    }
+
     createInitialSegment();
     addSegment(false);
     addSegment();
+
+    console.log("Road Data", inputData);
 
 
 
@@ -160,7 +185,7 @@ const Scene = () => {
         passedSegments: 0
       });
     };
-  }, [addSegment]);
+  }, [addSegment, inputData]);
 
   return (
     <div className={styles.sceneContainer}>

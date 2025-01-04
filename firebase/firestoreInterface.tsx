@@ -11,6 +11,25 @@ import { UploadData } from "@/components/upload/UploadContext";
 
 const db: Firestore = getFirestore(app);
 
+interface DatasetQuestion {
+  question: string;
+  answer: string;
+  dummy: string;
+  id: string;
+}
+
+export interface DatasetDocument {
+  questions: DatasetQuestion[];
+  embeddings: { name: string; value: string }[];
+  metadata: {
+    iconShape: string;
+    username: string;
+    title: string;
+    created: string;
+  };
+  userId: string;
+}
+
 // Called in useAuth, creates user document on account creation
 export const createUserDocument = async (userId: string, username: string): Promise<void> => {
   try {
@@ -86,4 +105,21 @@ export const createDatasetDocument = async (userId: string, data: UploadData): P
     return "";
   }
 };
+
+export const getDatasetDocument = async (docId: string): Promise<DatasetDocument | null> => {
+  try {
+    const docRef = doc(db, "datasets", docId);
+    const docSnap = await getDoc(docRef);
+
+    if (docSnap.exists()) {
+      return docSnap.data() as DatasetDocument;
+    } else {
+      console.log("No such document!");
+      return null;
+    }
+  } catch (error) {
+    console.error("Error fetching dataset document:", error);
+    return null;
+  }
+}
 

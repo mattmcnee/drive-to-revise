@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React, { useMemo, memo } from "react";
 import { CubicBezierCurve3 } from "three";
 import RoadSegment from "@/components/drive/road/RoadSegment";
 import { Segment } from "@/components/drive/utils";
@@ -7,7 +7,7 @@ import { LineSegment } from "./LineSegment";
 import { GateSegment } from "./GateSegment";
 import { TreeSegment } from "./TreeSegment";
 
-const RoadContructor = React.memo(({ segments }: { segments: Segment[] }) => {
+const RoadContructor = memo(({ segments }: { segments: Segment[] }) => {
   return (
     <group>
       {segments.map((segment, index) => {
