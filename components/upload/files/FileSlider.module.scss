@@ -26,9 +26,9 @@
   .sliderItemContent{
     border: 1px solid #eee;
     border-radius: 8px;
-    height: 100%;
     display: flex;
     flex-direction: column;
+    height: calc(100vh - 230px);
   }
 
   .sliderTitle{

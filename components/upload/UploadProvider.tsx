@@ -2,6 +2,7 @@ import React, { useReducer } from "react";
 import { toast } from "react-toastify";
 import { reducer, initialState, UploadContext } from "./UploadContext";
 import { useAuth } from "@/firebase/useAuth";
+import { getChunkedDataAsync } from "@/components/upload/utils";
 
 // Provider Component
 interface UploadProviderProps {
@@ -23,6 +24,23 @@ export const UploadProvider = ({ children }: UploadProviderProps) => {
 
   const generateEmbeddings = async () => {
     dispatch({ type: "SET_UPLOAD_STATUS", payload: "generating" });
+
+    const documents = state.documents.filter(text => text.trim() !== "");
+
+    if (documents.length === 0) {
+      toast.warn("No documents with text to submit");
+      dispatch({ type: "SET_UPLOAD_STATUS", payload: "upload" });
+      return;
+    }
+
+    for (let i = 0; i < documents.length; i++) {
+      const document = documents[i];
+
+      const chunks = await getChunkedDataAsync(document);
+
+      console.log(chunks);
+    }
+
 
     setTimeout(() => {
       dispatch({ type: "SET_UPLOAD_STATUS", payload: "review" });

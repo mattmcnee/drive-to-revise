@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { ToastContainer } from "react-toastify";
 import "./globals.css";
 
 import { Exo_2 } from "next/font/google";
@@ -25,6 +26,7 @@ export default function RootLayout({
     <html lang="en" className={exo2.className}>
       <body>
         {children}
+        <ToastContainer />
       </body>
     </html>
   );

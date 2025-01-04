@@ -57,6 +57,7 @@ const FileSlider = () => {
     const validDocuments = documents.filter(text => text.trim() !== "");
     if (validDocuments.length === 0) {
       toast.warn("No documents with text to submit");
+      
       return;
     }
     toast.success(`${validDocuments.length} document${validDocuments.length !== 1 ? "s" : ""} submitted`);

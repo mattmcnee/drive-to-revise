@@ -41,23 +41,24 @@ export type UploadAction =
 export const reducer = (data: UploadData, action: UploadAction): UploadData => {
   switch (action.type) {
 
-    // Add a new document to the .documents array
-    case "ADD_DOCUMENT": 
-      return { ...data, documents: [...data.documents, action.payload] };
+  // Add a new document to the .documents array
+  case "ADD_DOCUMENT": 
+    return { ...data, documents: [...data.documents, action.payload] };
 
     // Update the text of a document at a specific index
-    case "SET_DOCUMENT_TEXT":
-      const updatedDocuments = data.documents.map((doc, index) =>
-        index === action.payload.index ? action.payload.text : doc
-      );
-      return { ...data, documents: updatedDocuments };
+  case "SET_DOCUMENT_TEXT":
+    const updatedDocuments = data.documents.map((doc, index) =>
+      index === action.payload.index ? action.payload.text : doc
+    );
+    
+    return { ...data, documents: updatedDocuments };
 
     // Generate embeddings and questions from the uploaded documents
-    case "SET_UPLOAD_STATUS":
-      return { ...data, status: action.payload };
+  case "SET_UPLOAD_STATUS":
+    return { ...data, status: action.payload };
     
-    default:
-      return data;
+  default:
+    return data;
   }
 };
 
