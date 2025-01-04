@@ -1,0 +1,27 @@
+.authContainer{
+    width: 100%;
+    max-width: 500px;
+    margin: 0 auto;
+    padding: 20px 0 80px 0;
+    height: calc(100vh - 60px);
+    justify-content: center;
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+}
+
+.bottomRow{
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+    gap: 20px;
+}
+
+@media (max-width: 768px){
+    .bottomRow{
+        flex-direction: column;
+        gap: 12px;
+    }
+}
