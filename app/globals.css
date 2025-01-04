@@ -1,27 +1,24 @@
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --main-background-color: #fefefe;
+  --main-text-color: #111;
+  --light-text-color: #555;
+  --primary-color: #007bff;
+  --primary-text-color: #fefefe;
+  --secondary-color: #d9dedc;
+  --secondary-text-color: #111;
+  --border-color: #eeeeee
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
-html,
-body {
+html, body {
   max-width: 100vw;
   overflow-x: hidden;
 }
 
 body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  color: var(--main-text-color);
+  background: var(--main-background-color);
+  overflow-y: auto;
+  min-height: 100vh;
 }
 
 * {
@@ -35,8 +32,35 @@ a {
   text-decoration: none;
 }
 
-@media (prefers-color-scheme: dark) {
-  html {
-    color-scheme: dark;
-  }
+input, button, textarea {
+  font-family: inherit;
+  font-size: inherit;
+}
+
+li {
+  list-style: none;
+}
+
+.no-select {
+  user-select: none; /* Standard syntax */
+  -webkit-user-select: none; /* Safari */
+  -moz-user-select: none; /* Firefox */
+  -ms-user-select: none; /* Internet Explorer/Edge */
+
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Thin scrollbar on chromium */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: var(--secondary-color);
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--main-background-color);
 }
