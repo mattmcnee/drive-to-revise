@@ -1,0 +1,45 @@
+.formGroup{
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    margin: 10px 0;
+
+    .formInput {
+		width: 100%;
+		min-width: 300px;
+		max-width: 500px;
+		padding: 8px 12px;
+		margin: 0;
+		border: none;
+		outline: none;
+		border-radius: 8px;
+		background-color: #f8f8f8;
+		border: 1px solid lightgray;
+        transition: transform 0.2s ease;
+
+        &:hover{
+            transform: scale(1.01);
+        }
+	}
+
+	.formTextarea{
+		width: 100%;
+		min-width: 300px;
+		max-width: 500px;
+		padding: 8px 12px;
+		margin: 0;
+		border: none;
+		outline: none;
+		border-radius: 8px;
+		background-color: #f8f8f8;
+		border: 1px solid lightgray;
+        transition: transform 0.2s ease;
+		resize: none;
+		max-height: 200px;
+		overflow-y: auto;
+
+        &:hover{
+            transform: scale(1.01);
+        }
+	}
+}
