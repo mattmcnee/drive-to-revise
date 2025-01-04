@@ -52,6 +52,7 @@ export const UploadProvider = ({ children }: UploadProviderProps) => {
   const saveToFirestore = async () => {
     if (!user) {
       toast.error("You must be logged in to save a dataset");
+      
       return;
     }
 

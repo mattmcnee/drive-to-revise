@@ -53,6 +53,7 @@ const generateNewId = (length = 20) => {
     const randomIndex = Math.floor(Math.random() * characters.length);
     result += characters[randomIndex];
   }
+  
   return result;
 };
 

@@ -14,17 +14,17 @@ export default function Page() {
   const { user, loading } = useAuth();
   const [data, setData] = useState<DatasetDocument | null>(null);
 
-  const loadData = async () => {
+  const loadData = React.useCallback(async () => {
     const newData = await getDatasetDocument(id);
     setData(newData);
     console.log(newData);
-  }
+  }, [id]);
 
   useEffect(() => {
     if (user && id && !data) {
       loadData();
     }
-  }, [user, id, data]);
+  }, [user, id, data, loadData]);
 
   if (loading || !data) {
     return (<div>Loading...</div>);
