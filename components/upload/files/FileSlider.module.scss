@@ -1,0 +1,98 @@
+.sliderOuter {
+  display: flex;
+  justify-content: center;
+  flex-direction: row;
+  margin: 0 auto;
+  position: relative;
+  padding-bottom: 26px;
+  padding-top: 26px;
+  flex: 1;
+
+  .sliderInner {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    width: 100vw;
+    max-width: min(800px, 100vw - 76px - 76px - 40px);
+  }
+
+  .sliderItem {
+    padding: 0;
+    text-align: center;
+    height: 100%;
+    padding: 0 12px;
+  }
+
+  .sliderItemContent{
+    border: 1px solid #eee;
+    border-radius: 8px;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .sliderTitle{
+    padding: 12px;
+  }
+}
+
+.pageTitle{
+  margin-top: 14px;
+  width: 100%;
+  text-align: center;
+  padding: 0 24px;
+}
+
+.embeddingCont{
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.sliderSideButton{
+  padding: 0 24px;
+  margin: auto 0;
+}
+
+.sliderBottomButtons{
+  display: none;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
+  padding-bottom: 26px;
+  margin: 0 auto;
+  width: 100%;
+  max-width: 80vw;
+}
+
+.submitOptions{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  padding-bottom: 26px;
+}
+
+.documentCount{
+  margin-left: 24px;
+  text-align: center;
+}
+
+@media (max-width: 768px){
+  .sliderOuter .sliderInner{
+    max-width: calc(100vw - 26px - 26px);
+  }
+
+  .narrowSubmit{
+    margin: 14px 0 26px 0;
+  }
+
+  .sliderSideButton{
+    display: none;
+    padding: 0;
+  }
+
+  .sliderBottomButtons{
+    display: flex;
+  }
+}

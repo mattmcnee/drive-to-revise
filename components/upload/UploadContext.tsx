@@ -33,11 +33,24 @@ export const initialState: UploadData = {
 
 // All actions that can be dispatched to the reducer
 export type UploadAction = 
-  { type: "SET_UPLOAD_STATUS"; payload: string };
+  { type: "ADD_DOCUMENT"; payload: string }
+| { type: "SET_DOCUMENT_TEXT"; payload: { index: number; text: string } }
+| { type: "SET_UPLOAD_STATUS"; payload: string };
 
 // Updates the state based on the action dispatched
 export const reducer = (data: UploadData, action: UploadAction): UploadData => {
   switch (action.type) {
+
+    // Add a new document to the .documents array
+    case "ADD_DOCUMENT": 
+      return { ...data, documents: [...data.documents, action.payload] };
+
+    // Update the text of a document at a specific index
+    case "SET_DOCUMENT_TEXT":
+      const updatedDocuments = data.documents.map((doc, index) =>
+        index === action.payload.index ? action.payload.text : doc
+      );
+      return { ...data, documents: updatedDocuments };
 
     // Generate embeddings and questions from the uploaded documents
     case "SET_UPLOAD_STATUS":

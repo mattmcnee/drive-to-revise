@@ -1,6 +1,7 @@
 import { useUploadContext } from "./UploadContext";
 import { useAuth } from "@/firebase/useAuth";
 import { PrimaryButton } from "@/components/ui/Buttons";
+import FileSlider from "@/components/upload/files/FileSlider";
 
 const DatasetUpload = () => {
   const { state, generateEmbeddings } = useUploadContext();
@@ -14,6 +15,7 @@ const DatasetUpload = () => {
     <div>
       <PrimaryButton onClick={generateEmbeddings}>Generate Embeddings</PrimaryButton>
       {JSON.stringify(state)}
+      <FileSlider />
     </div>
   );
 };
