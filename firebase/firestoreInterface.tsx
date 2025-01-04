@@ -5,7 +5,16 @@ import {
   setDoc, 
   getFirestore, 
   Firestore,
-  collection
+  collection,
+  QueryConstraint,
+  orderBy,
+  limit,
+  where,
+  startAfter,
+  query,
+  getDocs,
+  QueryDocumentSnapshot,
+  DocumentData
 } from "firebase/firestore";
 import { UploadData } from "@/components/upload/UploadContext";
 
@@ -28,6 +37,7 @@ export interface DatasetDocument {
     created: string;
   };
   userId: string;
+  firestoreId?: string;
 }
 
 // Called in useAuth, creates user document on account creation
@@ -112,7 +122,9 @@ export const getDatasetDocument = async (docId: string): Promise<DatasetDocument
     const docSnap = await getDoc(docRef);
 
     if (docSnap.exists()) {
-      return docSnap.data() as DatasetDocument;
+      const data = docSnap.data() as DatasetDocument;
+      data.firestoreId = docId;
+      return data;
     } else {
       console.log("No such document!");
       return null;
@@ -122,4 +134,45 @@ export const getDatasetDocument = async (docId: string): Promise<DatasetDocument
     return null;
   }
 }
+
+// Paginated list of question set documents, optionally filtered by user ID
+// Most recent documents are returned first
+export const getPaginatedDatasets = async (pageSize: number, docsAfter?: string, userId?: string) => {
+  try {
+    const datasetsRef = collection(db, 'datasets');
+    const constraints: QueryConstraint[] = [
+      orderBy('metadata.created', 'desc'),
+      limit(pageSize)
+    ];
+
+    // Limit datasets to those created by the current user
+    if (userId) {
+      constraints.push(where('userId', '==', userId));
+    }
+    
+    // Start after the last document in the previous page
+    if (docsAfter) {
+      constraints.push(startAfter(docsAfter));
+    }
+
+    const queryRef = query(datasetsRef, ...constraints);
+
+    const querySnapshot = await getDocs(queryRef);
+    const datasets: DatasetDocument[] = querySnapshot.docs.map((doc: QueryDocumentSnapshot<DocumentData>) => {
+      const data = doc.data() as DatasetDocument;
+      data.firestoreId = doc.id;
+      return data;
+    });
+
+    const docs = querySnapshot.docs;
+    const nextAfter = docs.length > 0
+      ? docs[docs.length - 1].id
+      : null;
+
+    return { datasets, nextAfter };
+  } catch (error) {
+    console.error('Error fetching datasets:', error);
+    throw error;
+  }
+};
 

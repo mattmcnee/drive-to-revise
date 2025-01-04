@@ -1,0 +1,45 @@
+.cardBody{
+    padding: 8px 24px 8px 8px;
+    display: flex;
+    flex-direction: column;
+    border: 1px solid var(--border-color, #eee);
+    border-radius: 8px;
+    cursor: pointer;
+    width: min(calc(33vw - 24px), 320px);
+    display: flex;
+    height: 140px;
+    transition: transform 0.3s ease;
+
+    &:hover{
+        transform: rotate(1deg);
+    }
+}
+
+.cardRow{
+    display: flex;
+    flex-direction: row;
+    flex: 1;
+}
+
+.cardTitle{
+    margin: auto 0;
+    font-weight: bold;
+    font-size: 1.2rem;
+
+}
+
+.questions{
+    margin-top: 12px;
+}
+
+
+.cardUser{
+    margin-top: 2px;
+    color: var(--light-text-color, #555);
+}
+
+@media (max-width: 768px){
+    .cardBody{
+        width: 100%;
+    }
+  }
