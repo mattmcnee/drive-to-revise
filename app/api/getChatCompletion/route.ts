@@ -32,11 +32,13 @@ export async function POST(req: Request) {
 
     // Step 4: Return the response to the client
     const message = response.choices[0].message.content;
+    
     return new Response(JSON.stringify({ message: message }), {
       status: 200,
     });
   } catch (error) {
     console.error("Error:", error);
+    
     return new Response(JSON.stringify({ error: "Internal Server Error" }), {
       status: 500,
     });

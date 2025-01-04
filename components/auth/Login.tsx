@@ -21,6 +21,7 @@ const Login = () => {
       const message = code === "auth/invalid-credential" ? "Invalid username or password" : "An error occurred";
       toast.error(message);
       setSubmitted(false);
+      
       return;
     }
 
@@ -67,7 +68,7 @@ const Login = () => {
           </PrimaryButton>
 
           <ClickableText type="button" onClick={handleSignUp} disabled={submitted}>
-              Don't have an account? <span>Sign Up</span>
+              Don&apos;t have an account? <span>Sign Up</span>
           </ClickableText>
         </div>
       </form>

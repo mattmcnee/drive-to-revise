@@ -32,12 +32,14 @@ export async function POST(req: Request) {
 
     // Step 4: Send the embedding back to the client
     const embedding = response.data.data[0].embedding;
+    
     return new Response(JSON.stringify({ embedding }), {
       status: 200,
     });
         
   } catch (error) {
     console.error("Error:", error);
+    
     return new Response(JSON.stringify({ error: "Internal Server Error" }), {
       status: 500,
     });

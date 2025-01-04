@@ -17,25 +17,30 @@ const SignupPage = () => {
   const validateInput = (password: string, confirmPassword: string, username: string, email: string) => {
     if (password !== confirmPassword) {
       toast.error("Passwords do not match");
+      
       return;
     }
 
     if (username.length < 3 || username.length > 20) {
       toast.error("Username must be between 3 and 20 characters");
+      
       return false;
     }
 
     // No regex validation as some valid emails may not pass the regex
     if (email.length < 3) {
       toast.error("Email must be at least 3 characters");
+      
       return false;
     }
 
     // As per OSWARP: https://cheatsheetseries.owasp.org/cheatsheets/Authentication_Cheat_Sheet.html
     if (password.length < 8 || password.length > 64) {
       toast.error("Password must be between 8 and 64 characters");
+      
       return false;
     }
+    
     return true;
   };
 
@@ -52,6 +57,7 @@ const SignupPage = () => {
       const message = "Error creating account";
       toast.error(message);
       setSubmitted(false);
+      
       return;
     }
 
