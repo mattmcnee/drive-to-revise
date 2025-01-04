@@ -19,7 +19,7 @@ export interface Section {
 
 export interface TextEmbedding {
   text: string;
-  embedding: string;
+  value: string;
 }
 
 const questionGenerationInstructions = "You generate questions with an answer and a dummy (incorrect) answer. Your output MUST ALWAYS be a JSON array.";
@@ -77,16 +77,18 @@ export const getTextEmbeddingAsync = async (chunk: string) => {
         }
       }
     );
+    
     return {
       text: chunk,
-      embedding: response.data
+      value: response.data.embedding
     };
   } catch (error) {
-    toast.error(`Failed to fetch embedding`);
-    console.error(`Error fetching embedding for chunk:`, error);
+    toast.error("Failed to fetch embedding");
+    console.error("Error fetching embedding for chunk:", error);
+    
     return {
       text: chunk,
-      embedding: null
+      value: null
     };
   }
 };
@@ -113,10 +115,12 @@ export const getGeneratedQuestionAsync = async (text: string) => {
     );
 
     let questions = response.data.message.replace(/^```(?:json)?\n|\n```$/g, "").trim();
+    
     return JSON.parse(questions);
   } catch (error) {
     console.error("Error fetching chat completion:", error);
     toast.error("Failed to fetch questions");
+    
     return [];
   }
 };

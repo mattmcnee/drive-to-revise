@@ -79,6 +79,7 @@ interface UploadContextType {
     state: UploadData;
     dispatch: Dispatch<UploadAction>;
     generateEmbeddings: () => void;
+    saveToFirestore: () => void;
 }
 
 export const UploadContext = createContext<UploadContextType | undefined>(undefined);

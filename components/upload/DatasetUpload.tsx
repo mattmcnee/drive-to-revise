@@ -14,7 +14,7 @@ const DatasetUpload = () => {
   if (state.status === "generating" || state.status === "review" || state.status === "submitted") {
     return (<GeneratedQuestions />);
   } else {
-    return (<FileSlider />)
+    return (<FileSlider />);
   }
 };
 

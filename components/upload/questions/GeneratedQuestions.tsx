@@ -3,9 +3,10 @@ import QuestionCard from "./QuestionCard";
 
 import { useUploadContext } from "@/components/upload/UploadContext";
 import styles from "./GeneratedQuestions.module.scss";
+import { PrimaryButton } from "@/components/ui/Buttons";
 
 const GeneratedQuestions = () => {
-  const { state, dispatch } = useUploadContext();
+  const { state, dispatch, saveToFirestore } = useUploadContext();
 
   return (
     <div className={styles.embeddingCont}>
@@ -16,6 +17,9 @@ const GeneratedQuestions = () => {
           question={item}
         />
       ))}
+      <PrimaryButton onClick={() => saveToFirestore()}>
+        Review Questions
+      </PrimaryButton>
     </div>
   );
 };

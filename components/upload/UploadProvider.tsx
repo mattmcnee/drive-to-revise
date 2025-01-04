@@ -3,6 +3,7 @@ import { toast } from "react-toastify";
 import { reducer, initialState, UploadContext } from "./UploadContext";
 import { useAuth } from "@/firebase/useAuth";
 import { getChunkedDataAsync, getBatchedChunks, getQuestionsAndEmbeddingsAsync } from "@/components/upload/utils";
+import { createDatasetDocument } from "@/firebase/firestoreInterface";
 
 // Provider Component
 interface UploadProviderProps {
@@ -21,6 +22,7 @@ export const UploadProvider = ({ children }: UploadProviderProps) => {
     if (documents.length === 0) {
       toast.warn("No documents with text to submit");
       dispatch({ type: "SET_UPLOAD_STATUS", payload: "upload" });
+      
       return;
     }
 
@@ -47,8 +49,19 @@ export const UploadProvider = ({ children }: UploadProviderProps) => {
     dispatch({ type: "SET_UPLOAD_STATUS", payload: "review" });
   };
 
+  const saveToFirestore = async () => {
+    if (!user) {
+      toast.error("You must be logged in to save a dataset");
+      return;
+    }
+
+    dispatch({ type: "SET_UPLOAD_STATUS", payload: "submitted" });
+    const setId = await createDatasetDocument(user.uid, state);
+    window.location.href = `/drive/${setId}`;
+  };
+
   return (
-    <UploadContext.Provider value={{ state, dispatch, generateEmbeddings }}>
+    <UploadContext.Provider value={{ state, dispatch, generateEmbeddings, saveToFirestore }}>
       {children}
     </UploadContext.Provider>
   );
