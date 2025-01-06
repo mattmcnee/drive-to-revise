@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useFrame, useThree } from "@react-three/fiber";
-import { Vector3, Object3D } from "three";
+import { Vector3, Object3D, Raycaster } from "three";
 
 interface FpvCameraProps {
   vehicleRef: React.RefObject<Object3D>;
@@ -8,12 +8,16 @@ interface FpvCameraProps {
 }
 
 const FpvCamera = ({ vehicleRef, started } : FpvCameraProps) => {
-  const { camera, gl } = useThree();
+  const { camera, gl, scene } = useThree();
   const moveSpeed = 0.01;
   const rotationSpeed = -0.004;
   const keyStates = useRef<{ [key: string]: boolean }>({});
   const [isDragging, setIsDragging] = useState(false);
   const dragStartX = useRef(0);
+  
+  // For collision detection
+  const raycaster = new Raycaster();
+  const maxDistanceFromVehicle = 16;
 
   // Initialize camera position relative to vehicle
   useEffect(() => {
@@ -27,6 +31,34 @@ const FpvCamera = ({ vehicleRef, started } : FpvCameraProps) => {
       camera.lookAt(lookAtPosition);
     }
   }, [vehicleRef.current]);
+
+  const checkForCollisions = (movement: Vector3) => {
+    // If too far from the vehicle and moving away, return true
+    if (vehicleRef.current) {
+      const distance = camera.position.distanceTo(vehicleRef.current.position);
+      if (distance > maxDistanceFromVehicle) {
+        const directionToVehicle = vehicleRef.current.position.clone().sub(camera.position).normalize();
+        const movementDirection = movement.clone().normalize();
+        const dotProduct = directionToVehicle.dot(movementDirection);
+        if (dotProduct < 0) {
+          return true;
+        }
+      }
+    }
+
+    // Cast ray from slightly below the camera
+    const offset = new Vector3(0, -0.05, 0);
+    raycaster.ray.origin.copy(camera.position).add(offset);
+
+    // Ray 0.2 units in movement direction
+    const movementDirection = movement.clone().normalize();
+    raycaster.ray.direction.copy(movementDirection);
+    raycaster.far = 0.2;
+
+    // Return true if the ray intersects with an object in the scene
+    const intersects = raycaster.intersectObjects(scene.children, true);
+    return intersects.length > 0;
+  };
 
   // Handle key press and mouse drag events
   useEffect(() => {
@@ -94,7 +126,7 @@ const FpvCamera = ({ vehicleRef, started } : FpvCameraProps) => {
       movement.setLength(moveSpeed);
     }
 
-    if (movement.length() === 0) return;
+    if (movement.length() === 0 || checkForCollisions(movement)) return;
 
     // Update camera position
     camera.position.add(movement).setY(0.2);
