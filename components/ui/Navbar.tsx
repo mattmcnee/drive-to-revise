@@ -24,7 +24,7 @@ const NavLinks = ({ className }: { className: string }) => {
       <li><Link href="/credits">Credits</Link></li>
       {user ? (
         <>
-          <li><Link href="/mysets">My Sets</Link></li>
+          <li><Link href="/upload">Upload</Link></li>
           <li><Link href="/profile">Profile</Link></li>
           <li><div onClick={logoutUser} className={styles.link}>Logout</div></li>
         </>
