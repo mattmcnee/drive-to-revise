@@ -1,9 +1,10 @@
 import React, { useState, useRef, useEffect } from "react";
 import { useFrame, useThree } from "@react-three/fiber";
 import { useGLTF } from "@react-three/drei";
-import { Mesh, Vector3, CubicBezierCurve3 } from "three";
+import { Mesh, Vector3, CubicBezierCurve3, Group } from "three";
 import { RoadData, Segment, getSidewaysRotation } from "@/components/drive/utils";
 import FpvCamera from "./FpvCamera";
+import VehicleModel from "./VehicleModel";
 
 interface VehicleProps {
   roadData: RoadData,
@@ -26,7 +27,7 @@ const Vehicle = ({
 }: VehicleProps) => {
 
   const floorRef = useRef<Mesh>(null);
-  const vehicleRef = useRef<Mesh>(null);
+  const vehicleRef = useRef<Group>(null);
 
   // Tracks position along road
   const [progress, setProgress] = useState(1);
@@ -205,7 +206,7 @@ const Vehicle = ({
   return (
     <>
       <FpvCamera vehicleRef={vehicleRef} started={started}/>
-      <primitive ref={vehicleRef} object={scene} position={[0, 0.1, 0]} scale={[scale, scale, scale]} />
+      <VehicleModel vehicleRef={vehicleRef} type="muscle_car" />
            
       <mesh ref={floorRef} rotation={[-Math.PI / 2, 0, 0]} position={[0, 0, 0]}>
         <planeGeometry args={[200, 200]} />

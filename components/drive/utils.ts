@@ -1,4 +1,4 @@
-import { Vector3, Shape } from "three";
+import { Vector3, Shape, Matrix4 } from "three";
 
 export type Question = {
   dummy: string;
@@ -175,6 +175,26 @@ export const getSidewaysRotation = (sideways: number, roadEdge: number) => {
   }
 
   return scale;
+};
+
+export const getModelMatrix = ( modelType:string ): Matrix4 => {
+  let rotationMatrix, scaleMatrix, translationMatrix;
+
+  if (modelType === "muscle_car") {
+    // Translate by 0, rotate 0deg, and scale by 0.06
+    translationMatrix = new Matrix4().makeTranslation(0, 0.08, 0);
+    rotationMatrix = new Matrix4().makeRotationY(0);
+    scaleMatrix = new Matrix4().makeScale(0.06, 0.06, 0.06);
+
+  } else {
+    // Default to identity matrix
+    translationMatrix = new Matrix4();
+    rotationMatrix = new Matrix4();
+    scaleMatrix = new Matrix4();
+
+  }
+
+  return translationMatrix.multiply(rotationMatrix).multiply(scaleMatrix);
 };
 
 export const getHexagonShape = (size: number) => {
