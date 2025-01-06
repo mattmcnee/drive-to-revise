@@ -19,6 +19,7 @@ import { VehicleModel } from "@/components/drive/utils";
 import { TertiaryIconButton } from "@/components/ui/Buttons";
 
 import { DatasetDocument } from "@/firebase/firestoreInterface";
+import Chatbot from "@/components/drive/chatbot/Chatbot";
 
 const iconMap: { [key: string]: string } = {
   circle: circleIcon,
@@ -60,7 +61,7 @@ const ScenePanel = ({ gameState, startGame, dataset }: ScenePanelProps) => {
 
       ) : (
       gameState.questionFailed ? (
-        <PrimaryButton onClick={() => startGame("default")}>Try again</PrimaryButton>
+        <Chatbot startGame={startGame} question={gameState.questionFailed} />
       ) : (
         <div className={styles.questionContainer}>
           <div className={styles.questionHeader}>{question.question}</div>
