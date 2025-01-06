@@ -52,12 +52,25 @@ const FpvCamera = ({ vehicleRef, started } : FpvCameraProps) => {
 
     // Ray 0.2 units in movement direction
     const movementDirection = movement.clone().normalize();
-    raycaster.ray.direction.copy(movementDirection);
     raycaster.far = 0.2;
 
-    // Return true if the ray intersects with an object in the scene
-    const intersects = raycaster.intersectObjects(scene.children, true);
-    return intersects.length > 0;
+    // Add rays with 45-degree offsets on either side along the world Y-axis
+    const rayDirections = [
+      movementDirection.clone().applyAxisAngle(new Vector3(0, 1, 0), Math.PI / 6).applyAxisAngle(new Vector3(1, 0, 0), -Math.PI / 6), // 45-degree right offset
+      movementDirection.clone().applyAxisAngle(new Vector3(0, 1, 0), -Math.PI / 6).applyAxisAngle(new Vector3(1, 0, 0), -Math.PI / 6), // 45-degree right offset
+      movementDirection.clone().applyAxisAngle(new Vector3(0, 1, 0), Math.PI / 6).applyAxisAngle(new Vector3(1, 0, 0), Math.PI / 6), // 45-degree right offset, 15-degree upwards
+      movementDirection.clone().applyAxisAngle(new Vector3(0, 1, 0), -Math.PI / 6).applyAxisAngle(new Vector3(1, 0, 0), Math.PI / 6), // 45-degree left offset, 15-degree upwards
+    ];
+
+    // Return true if any ray intersects with an object in the scene
+    for (let i = 0; i < rayDirections.length; i++) {
+      raycaster.ray.direction.copy(rayDirections[i]);
+      const intersects = raycaster.intersectObjects(scene.children, true);
+      if (intersects.length > 0) {
+        return true;
+      }
+    }
+    return false;
   };
 
   // Handle key press and mouse drag events
