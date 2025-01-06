@@ -14,6 +14,7 @@ interface VehicleProps {
   checkQuestion: (questionIndex: number, segmentIndex: number, currentOffset: number) => void,
   maxSpeed?: number
   started?: boolean
+  type?: string
 }
 
 const Vehicle = ({
@@ -23,7 +24,8 @@ const Vehicle = ({
   accelerate = false,
   checkQuestion,
   maxSpeed = 8,
-  started = false
+  started = false,
+  type = "family_car"
 }: VehicleProps) => {
 
   const floorRef = useRef<Mesh>(null);
@@ -200,13 +202,10 @@ const Vehicle = ({
     }
   });
 
-  const { scene } = useGLTF("/models/muscle_car/scene.gltf");
-  const scale = 0.06;
-
   return (
     <>
       <FpvCamera vehicleRef={vehicleRef} started={started}/>
-      <VehicleModel vehicleRef={vehicleRef} type="muscle_car" />
+      <VehicleModel vehicleRef={vehicleRef} type={type} />
            
       <mesh ref={floorRef} rotation={[-Math.PI / 2, 0, 0]} position={[0, 0, 0]}>
         <planeGeometry args={[200, 200]} />

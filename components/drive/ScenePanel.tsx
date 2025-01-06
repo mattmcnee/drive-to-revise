@@ -1,7 +1,7 @@
 import React from "react";
 import { PrimaryButton } from "@/components/ui/Buttons";
 import styles from "./ScenePanel.module.scss";
-import { GameState } from "@/components/drive/utils";
+import { GameState, VehicleModel } from "@/components/drive/utils";
 import Image from "next/image";
 
 import circleIcon from "@/public/icons/shapes/circle.svg";
@@ -22,7 +22,7 @@ const iconMap: { [key: string]: string } = {
 
 interface ScenePanelProps {
   gameState: GameState;
-  startGame: () => void;
+  startGame: (model: VehicleModel | "default") => void;
 }
 
 const ScenePanel = ({ gameState, startGame }: ScenePanelProps) => {
@@ -31,12 +31,12 @@ const ScenePanel = ({ gameState, startGame }: ScenePanelProps) => {
   return (
     <div className={styles.panelContainer}>
       {!gameState.started && (
-        <PrimaryButton onClick={startGame}>Start Game</PrimaryButton>
+        <PrimaryButton onClick={() => startGame("family_car")}>Start Game</PrimaryButton>
       )}
       {gameState.questionFailed ? (
         <div className={styles.questionHeader}>
           <h3>Wrong Answer</h3>
-          <PrimaryButton onClick={startGame}>Try Again</PrimaryButton>
+          <PrimaryButton onClick={() => startGame("default")}>Try Again</PrimaryButton>
         </div>
       ) : (
         <div className={styles.questionContainer}>

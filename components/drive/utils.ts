@@ -33,7 +33,11 @@ export type GameState = {
   questionFailed: Question | null;
   displayedQuestion: QuestionUi | null;
   accelerateVehicle: boolean;
+  vehicleType: VehicleModel;
+  maxSpeed: number;
 }
+
+export type VehicleModel = "family_car" | "old_car" | "muscle_car";
 
 export const config = {
   road: {
@@ -185,6 +189,18 @@ export const getModelMatrix = ( modelType:string ): Matrix4 => {
     translationMatrix = new Matrix4().makeTranslation(0, 0.08, 0);
     rotationMatrix = new Matrix4().makeRotationY(0);
     scaleMatrix = new Matrix4().makeScale(0.06, 0.06, 0.06);
+
+  } else if (modelType === "old_car") {
+    // Translate Y by 0.02, rotate -90deg, and scale by 0.06
+    translationMatrix = new Matrix4().makeTranslation(0, 0.1, 0);
+    rotationMatrix = new Matrix4().makeRotationY(-Math.PI / 2);
+    scaleMatrix = new Matrix4().makeScale(0.06, 0.06, 0.06);
+
+  } else if (modelType === "family_car") {
+    // Translate Y by -0.07 and Z by -0.1, rotate 0deg, and scale by 0.11
+    translationMatrix = new Matrix4().makeTranslation(0, 0.01, -0.1);
+    rotationMatrix = new Matrix4().makeRotationY(0);
+    scaleMatrix = new Matrix4().makeScale(0.13, 0.13, 0.13);
 
   } else {
     // Default to identity matrix

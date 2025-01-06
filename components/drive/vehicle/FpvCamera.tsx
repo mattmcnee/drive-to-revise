@@ -30,7 +30,7 @@ const FpvCamera = ({ vehicleRef, started } : FpvCameraProps) => {
       lookAtPosition.y = camera.position.y; // Keep the y position the same to avoid affecting x or z rotation
       camera.lookAt(lookAtPosition);
     }
-  }, [vehicleRef, vehicleRef.current, camera, ]);
+  }, [vehicleRef, vehicleRef.current?.position, camera, ]);
 
   const checkForCollisions = (movement: Vector3) => {
     // If too far from the vehicle and moving away, return true

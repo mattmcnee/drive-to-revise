@@ -9,7 +9,14 @@ import { DatasetDocument } from "@/firebase/firestoreInterface";
 
 import styles from "./Scene.module.scss";
 
-import { RoadData, GameState, generateRoadSegment, getNextQuestion, getNextSegmentsFirstQuestion } from "@/components/drive/utils";
+import { 
+  RoadData, 
+  GameState, 
+  generateRoadSegment, 
+  getNextQuestion, 
+  getNextSegmentsFirstQuestion,
+  VehicleModel
+} from "@/components/drive/utils";
 import Vehicle from "@/components/drive/vehicle/Vehicle";
 import ScenePanel from "@/components/drive/ScenePanel";
 
@@ -33,12 +40,18 @@ const Scene = ({ inputData }: SceneProps) => {
     passedSegments: 0
   });
 
+  const vehicleTypes: VehicleModel[] = ["muscle_car", "family_car", "old_car"];
+  const randomVehicleType = vehicleTypes[Math.floor(Math.random() * vehicleTypes.length)];
+
+
   const [gameState, setGameState] = useState<GameState>(
     {
       started: false,
       questionFailed: null,
       displayedQuestion: null,
-      accelerateVehicle: false
+      accelerateVehicle: false,
+      vehicleType: randomVehicleType,
+      maxSpeed: 4
     }
   );
 
@@ -108,12 +121,34 @@ const Scene = ({ inputData }: SceneProps) => {
     });
   };
 
-  const startGame = () => {
+  const startGame = (vehicleType: "default" | VehicleModel = "family_car") => {
+    if (vehicleType === "default") {
+      vehicleType = gameState.vehicleType;
+    }
+
+    let maxSpeed;
+    switch (vehicleType) {
+      case "family_car":
+        maxSpeed = 4;
+        break;
+      case "old_car":
+        maxSpeed = 8.2;
+        break;
+      case "muscle_car":
+        maxSpeed = 12.4;
+        break;
+      default:
+        maxSpeed = 4;
+        break;
+    }
+
     setGameState(prevGameState => ({
       ...prevGameState,
       started: true,
       questionFailed: null,
-      accelerateVehicle: true
+      accelerateVehicle: true,
+      vehicleType: vehicleType,
+      maxSpeed: maxSpeed
     }));
   };
 
@@ -200,6 +235,8 @@ const Scene = ({ inputData }: SceneProps) => {
           accelerate={gameState.accelerateVehicle}
           checkQuestion={checkQuestion}
           started={gameState.started}
+          maxSpeed={gameState.maxSpeed}
+          type={gameState.vehicleType}
         />
 
         <RoadContructor segments={roadData.segments} />
