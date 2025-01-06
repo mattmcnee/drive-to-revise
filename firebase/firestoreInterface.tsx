@@ -112,6 +112,24 @@ export const createDatasetDocument = async (userId: string, data: UploadData): P
   }
 };
 
+export const getPermissionLevel = async (userId: string): Promise<string> => {
+  try {
+    const userDoc = doc(db, "users", userId);
+    const docSnap = await getDoc(userDoc);
+
+    if (docSnap.exists()) {
+      const data = docSnap.data();
+      return data.subscription;
+    } else {
+      console.log("No such document!");
+      return "";
+    }
+  } catch (error) {
+    console.error("Error fetching user document:", error);
+    return "";
+  }
+};
+
 export const getDatasetDocument = async (docId: string): Promise<DatasetDocument | null> => {
   try {
     const docRef = doc(db, "datasets", docId);

@@ -1,11 +1,11 @@
-import React from 'react';
-import Navbar from '@/components/ui/Navbar';
+import React from "react";
+import Navbar from "@/components/ui/Navbar";
 
-const CreditsPage= () => {
+const CreditsPage = () => {
   return (
     <>
       <Navbar />
-      <div style={{ padding: '20px' }}>
+      <div style={{ padding: "20px" }}>
         <h3>
           This application was developed by <a href="https://github.com/mattmcnee">Matt McNee</a> and is available under the <a href="https://opensource.org/license/mit">MIT License</a>.
         </h3>
