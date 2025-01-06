@@ -128,18 +128,18 @@ const Scene = ({ inputData }: SceneProps) => {
 
     let maxSpeed;
     switch (vehicleType) {
-      case "family_car":
-        maxSpeed = 4;
-        break;
-      case "old_car":
-        maxSpeed = 8.2;
-        break;
-      case "muscle_car":
-        maxSpeed = 12.4;
-        break;
-      default:
-        maxSpeed = 4;
-        break;
+    case "family_car":
+      maxSpeed = 4;
+      break;
+    case "old_car":
+      maxSpeed = 8.2;
+      break;
+    case "muscle_car":
+      maxSpeed = 12.4;
+      break;
+    default:
+      maxSpeed = 4;
+      break;
     }
 
     setGameState(prevGameState => ({
@@ -193,23 +193,19 @@ const Scene = ({ inputData }: SceneProps) => {
 
   // Initialize the road with 3 segments; cleanup when unmounting
   useEffect(() => {
-    if (inputData.questions.length > 0) {
-      liveQuestions.current = inputData.questions.map(q => ({
-        uses: 0,
-        answer: q.answer,
-        dummy: q.dummy,
-        question: q.question,
-        id: q.id
-      }));
-    }
+    if (!inputData || inputData.questions.length <= 0) return;
+
+    liveQuestions.current = inputData.questions.map(q => ({
+      uses: 0,
+      answer: q.answer,
+      dummy: q.dummy,
+      question: q.question,
+      id: q.id
+    }));
 
     createInitialSegment();
     addSegment(false);
     addSegment();
-
-    console.log("Road Data", inputData);
-
-
 
     return () => {
       setRoadData({

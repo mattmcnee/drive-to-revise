@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import Scene from "@/components/drive/Scene";
 import { useAuth } from "@/firebase/useAuth";
 import { getDatasetDocument, DatasetDocument } from "@/firebase/firestoreInterface";
+import LoadingScreen from '@/components/ui/LoadingScreen';
 
 import { useParams } from "next/navigation";
 
@@ -13,11 +14,16 @@ export default function Page() {
 
   const { user, loading } = useAuth();
   const [data, setData] = useState<DatasetDocument | null>(null);
+  const [dataLoading , setDataloading] = useState(true);
 
   const loadData = React.useCallback(async () => {
     const newData = await getDatasetDocument(id);
     setData(newData);
-    console.log(newData);
+
+    setTimeout(() => {
+      setDataloading(false);
+    }, 400);
+    
   }, [id]);
 
   useEffect(() => {
@@ -26,11 +32,14 @@ export default function Page() {
     }
   }, [user, id, data, loadData]);
 
-  if (loading || !data) {
-    return (<div>Loading...</div>);
-  }
-
   return (
-    <Scene inputData={data} />
+    <>
+    {(loading || !data || dataLoading) && 
+      <LoadingScreen loading={true}/>
+    }
+    {data &&
+      <Scene inputData={data} />
+    }
+    </>
   );
 }
