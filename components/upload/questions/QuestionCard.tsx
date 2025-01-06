@@ -1,15 +1,16 @@
-import React from "react";
-import Image from "next/image";
-import styles from "./QuestionCard.module.scss";
-import deleteIcon from "@/public/icons/delete.svg";
-import { TertiaryIconButton } from "@/components/ui/Buttons";
+import React from 'react';
+import Image from 'next/image';
+import styles from './QuestionCard.module.scss';
+import deleteIcon from '@/public/icons/delete.svg';
+import { TertiaryIconButton } from '@/components/ui/Buttons';
 
 interface QuestionCardProps {
-  index: number;
-  question: any;
+    index: number;
+    question: any;
+    deleteQuestionItem: (index: number) => void;
 }
 
-const QuestionCard = ({ index, question } : QuestionCardProps) => {
+const QuestionCard = ({ index, question, deleteQuestionItem } : QuestionCardProps) => {
 
   return (
     <div className={styles.questionCard}>
@@ -18,7 +19,7 @@ const QuestionCard = ({ index, question } : QuestionCardProps) => {
         <span>Correct: {question.answer}</span>
         <span>Incorrect: {question.dummy}</span>
       </div>
-      <TertiaryIconButton onClick={() => console.log("Delete")}>
+      <TertiaryIconButton onClick={() => deleteQuestionItem(index)}>
         <Image src={deleteIcon} alt="Delete" />
       </TertiaryIconButton>
     </div>

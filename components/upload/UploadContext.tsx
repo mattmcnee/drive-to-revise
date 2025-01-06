@@ -1,22 +1,21 @@
 
-import React, { createContext, useContext, useReducer, Dispatch } from "react";
+import React, { createContext, useContext, useReducer, Dispatch } from 'react';
 import { Section, TextEmbedding, Question } from "@/components/upload/utils";
 
 export interface UploadData {
-    documents: string[];
-    embeddings: TextEmbedding[];
-    questions: Question[];
-    status: string;
-    metadata: {
-        iconShape: string;
-        username: string;
-        title: string;
-    };
+  documents: string[];
+  embeddings: TextEmbedding[];
+  questions: Question[];
+  status: string;
+  metadata: {
+      iconShape: string;
+      username: string;
+      title: string;
+  };
 }
 
 const randomShape = () => {
-  const shapes = ["circle", "square", "triangle", "diamond", "pentagon", "hexagon"];
-  
+  const shapes = ['circle', 'square', 'triangle', 'diamond', 'pentagon', 'hexagon'];
   return shapes[Math.floor(Math.random() * shapes.length)];
 };
 
@@ -39,7 +38,10 @@ export type UploadAction =
 | { type: "SET_DOCUMENT_TEXT"; payload: { index: number; text: string } }
 | { type: "SET_UPLOAD_STATUS"; payload: string }
 | { type: "ADD_EMBEDDINGS"; payload: TextEmbedding[] }
-| { type: "ADD_QUESTIONS"; payload: Question[] };
+| { type: "ADD_QUESTIONS"; payload: Question[] }
+| { type: "DELETE_QUESTION"; payload: number }
+| { type: 'SET_ICON_SHAPE'; payload: string }
+| { type: 'SET_TITLE'; payload: string };
 
 // Updates the state based on the action dispatched
 export const reducer = (data: UploadData, action: UploadAction): UploadData => {
@@ -61,6 +63,12 @@ export const reducer = (data: UploadData, action: UploadAction): UploadData => {
   case "SET_UPLOAD_STATUS":
     return { ...data, status: action.payload };
 
+  
+  // Delete a question from the .questions array
+  case "DELETE_QUESTION":
+    const updatedQuestions = data.questions.filter((_, idx) => idx !== action.payload);
+    return { ...data, questions: updatedQuestions };
+
     // Add embeddings to the .embeddings array
   case "ADD_EMBEDDINGS":
     return { ...data, embeddings: [...data.embeddings, ...action.payload] };
@@ -68,6 +76,13 @@ export const reducer = (data: UploadData, action: UploadAction): UploadData => {
     // Add questions to the .questions array
   case "ADD_QUESTIONS":
     return { ...data, questions: [...data.questions, ...action.payload] };
+
+    case 'SET_ICON_SHAPE':
+      return { ...data, metadata: { ...data.metadata, iconShape: action.payload } };
+  
+    case 'SET_TITLE':
+      return { ...data, metadata: { ...data.metadata, title: action.payload } };
+  
     
   default:
     return data;
@@ -88,8 +103,7 @@ export const UploadContext = createContext<UploadContextType | undefined>(undefi
 export const useUploadContext = () => {
   const context = useContext(UploadContext);
   if (!context) {
-    throw new Error("useUploadContext must be used within an UploadProvider");
+    throw new Error('useUploadContext must be used within an UploadProvider');
   }
-  
   return context;
 };

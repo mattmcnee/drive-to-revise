@@ -9,8 +9,9 @@
   justify-content: space-between;
   align-items: center;
   max-width: 800px;
-  margin: 20px 0;
+  margin: 20px;
   border: 1px solid var(--border-color, #eee);
+  width: 100%;
 
   .questionContent{
     display: flex;
