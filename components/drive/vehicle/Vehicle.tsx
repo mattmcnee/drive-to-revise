@@ -158,7 +158,7 @@ const Vehicle = ({
 
       // Update camera position and rotation to follow the vehicle if the game has started
       if (started){
-        const offset = new Vector3(0, 0.3, -0.6).applyQuaternion(vehicleRef.current.quaternion);
+        const offset = new Vector3(0, 0.5, -0.9).applyQuaternion(vehicleRef.current.quaternion);
         camera.position.copy(vehicleRef.current.position.clone().add(offset));
         camera.lookAt(vehicleRef.current.position);
       }
