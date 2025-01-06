@@ -2,7 +2,8 @@ import React, { useState, useRef, useEffect } from "react";
 import { useFrame, useThree } from "@react-three/fiber";
 import { useGLTF } from "@react-three/drei";
 import { Mesh, Vector3, CubicBezierCurve3 } from "three";
-import { RoadData, Segment, getSidewaysRotation } from "./utils";
+import { RoadData, Segment, getSidewaysRotation } from "@/components/drive/utils";
+import FpvCamera from "./FpvCamera";
 
 interface VehicleProps {
   roadData: RoadData,
@@ -11,6 +12,7 @@ interface VehicleProps {
   accelerate?: boolean,
   checkQuestion: (questionIndex: number, segmentIndex: number, currentOffset: number) => void,
   maxSpeed?: number
+  started?: boolean
 }
 
 const Vehicle = ({
@@ -19,7 +21,8 @@ const Vehicle = ({
   addRoadSegment,
   accelerate = false,
   checkQuestion,
-  maxSpeed = 8
+  maxSpeed = 8,
+  started = false
 }: VehicleProps) => {
 
   const floorRef = useRef<Mesh>(null);
@@ -148,13 +151,14 @@ const Vehicle = ({
         floorRef.current.position.copy(vehicleRef.current.position.clone().setY(0));
         floorRef.current.rotation.copy(vehicleRef.current.rotation);
         floorRef.current.rotateX(-Math.PI / 2);
-        floorRef.current.translateY(-86);
       }
 
-      // Update camera position and rotation to follow the vehicle if attached
-      const offset = new Vector3(0, 0.3, -0.6).applyQuaternion(vehicleRef.current.quaternion);
-      camera.position.copy(vehicleRef.current.position.clone().add(offset));
-      camera.lookAt(vehicleRef.current.position);
+      // Update camera position and rotation to follow the vehicle if the game has started
+      if (started){
+        const offset = new Vector3(0, 0.3, -0.6).applyQuaternion(vehicleRef.current.quaternion);
+        camera.position.copy(vehicleRef.current.position.clone().add(offset));
+        camera.lookAt(vehicleRef.current.position);
+      }
 
       // roadEdge
       const sideways = targetOffset.current - currentOffset.current;
@@ -200,11 +204,7 @@ const Vehicle = ({
 
   return (
     <>
-      {/* <mesh ref={vehicleRef}  position={[0, 0.1, 0]}>
-        <boxGeometry args={[0.3, 0.2, 0.6]} />
-        <meshStandardMaterial color="red" />
-      </mesh> */}
-      
+      <FpvCamera vehicleRef={vehicleRef} started={started}/>
       <primitive ref={vehicleRef} object={scene} position={[0, 0.1, 0]} scale={[scale, scale, scale]} />
            
       <mesh ref={floorRef} rotation={[-Math.PI / 2, 0, 0]} position={[0, 0, 0]}>

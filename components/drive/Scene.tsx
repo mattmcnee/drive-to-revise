@@ -10,10 +10,8 @@ import { DatasetDocument } from "@/firebase/firestoreInterface";
 import styles from "./Scene.module.scss";
 
 import { RoadData, GameState, generateRoadSegment, getNextQuestion, getNextSegmentsFirstQuestion } from "@/components/drive/utils";
-import Vehicle from "./Vehicle";
-import ScenePanel from "./ScenePanel";
-
-import questions from "./questions.json";
+import Vehicle from "@/components/drive/vehicle/Vehicle";
+import ScenePanel from "@/components/drive/ScenePanel";
 
 interface SceneProps {
   inputData: DatasetDocument;
@@ -201,17 +199,10 @@ const Scene = ({ inputData }: SceneProps) => {
           addRoadSegment={addSegment} 
           accelerate={gameState.accelerateVehicle}
           checkQuestion={checkQuestion}
+          started={gameState.started}
         />
 
         <RoadContructor segments={roadData.segments} />
-
-        <OrbitControls 
-          enableZoom={true}
-          enablePan={true}
-          enableRotate={true}
-          minDistance={2}
-          maxDistance={50}
-        />
       </Canvas>
 
       <div className={styles.sceneOverlay}>
