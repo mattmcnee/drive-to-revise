@@ -103,6 +103,21 @@ export const getTextEmbeddingAsync = async (chunk: string) => {
   }
 };
 
+const isValidQuestion = (question: any): question is Question =>
+  typeof question.answer === 'string' &&
+  typeof question.question === 'string' &&
+  typeof question.dummy === 'string' &&
+  (question.id === undefined || typeof question.id === 'string');
+
+// Returns any valid questions for a valid array or [] otherwise
+const getValidQuestions = (questions: any[]): Question[] => {
+  if (Array.isArray(questions)) {
+    return questions.filter(isValidQuestion);
+  } else {
+    return [];
+  }
+};
+
 export const getGeneratedQuestionAsync = async (text: string) => {
   const model = "gpt-4o-mini";
   const temperature = 0.3;
@@ -126,12 +141,13 @@ export const getGeneratedQuestionAsync = async (text: string) => {
 
     const message = response.data.message;
     const questions = JSON.parse(message.replace(/^```(?:json)?\n|\n```$/g, "").trim());
+    const validQuestions = getValidQuestions(questions);
 
-    questions.forEach((question: Question) => {
+    validQuestions.forEach((question: Question) => {
       question.id = generateNewId();
     });
 
-    return questions;
+    return validQuestions;
   } catch (error) {
     console.error("Error fetching chat completion:", error);
     toast.error("Failed to fetch questions");
