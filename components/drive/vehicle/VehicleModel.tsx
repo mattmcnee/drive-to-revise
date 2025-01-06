@@ -19,13 +19,13 @@ const VehicleModel = ({ vehicleRef, type }: VehicleModelProps) => {
     modelRef.current.matrix.identity();
     modelRef.current.applyMatrix4(getModelMatrix(type));
 
-  }, [modelRef.current, type]);
+  }, [modelRef, type]);
 
   return (
     <group ref={vehicleRef}>
       <primitive ref={modelRef} object={scene} matrixAutoUpdate={false} />
     </group>
   );
-}
+};
 
 export default VehicleModel;

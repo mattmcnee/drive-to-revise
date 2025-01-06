@@ -30,7 +30,7 @@ const FpvCamera = ({ vehicleRef, started } : FpvCameraProps) => {
       lookAtPosition.y = camera.position.y; // Keep the y position the same to avoid affecting x or z rotation
       camera.lookAt(lookAtPosition);
     }
-  }, [vehicleRef.current]);
+  }, [vehicleRef, vehicleRef.current, camera, ]);
 
   const checkForCollisions = (movement: Vector3) => {
     // If too far from the vehicle and moving away, return true
@@ -54,12 +54,12 @@ const FpvCamera = ({ vehicleRef, started } : FpvCameraProps) => {
     const movementDirection = movement.clone().normalize();
     raycaster.far = 0.2;
 
-    // Add rays with 45-degree offsets on either side along the world Y-axis
+    // Add rays with 30-degree offsets on either side along the world Y-axis
     const rayDirections = [
-      movementDirection.clone().applyAxisAngle(new Vector3(0, 1, 0), Math.PI / 6).applyAxisAngle(new Vector3(1, 0, 0), -Math.PI / 6), // 45-degree right offset
-      movementDirection.clone().applyAxisAngle(new Vector3(0, 1, 0), -Math.PI / 6).applyAxisAngle(new Vector3(1, 0, 0), -Math.PI / 6), // 45-degree right offset
-      movementDirection.clone().applyAxisAngle(new Vector3(0, 1, 0), Math.PI / 6).applyAxisAngle(new Vector3(1, 0, 0), Math.PI / 6), // 45-degree right offset, 15-degree upwards
-      movementDirection.clone().applyAxisAngle(new Vector3(0, 1, 0), -Math.PI / 6).applyAxisAngle(new Vector3(1, 0, 0), Math.PI / 6), // 45-degree left offset, 15-degree upwards
+      movementDirection.clone().applyAxisAngle(new Vector3(0, 1, 0), Math.PI / 6).applyAxisAngle(new Vector3(1, 0, 0), -Math.PI / 6), 
+      movementDirection.clone().applyAxisAngle(new Vector3(0, 1, 0), -Math.PI / 6).applyAxisAngle(new Vector3(1, 0, 0), -Math.PI / 6),
+      movementDirection.clone().applyAxisAngle(new Vector3(0, 1, 0), Math.PI / 6).applyAxisAngle(new Vector3(1, 0, 0), Math.PI / 6),
+      movementDirection.clone().applyAxisAngle(new Vector3(0, 1, 0), -Math.PI / 6).applyAxisAngle(new Vector3(1, 0, 0), Math.PI / 6),
     ];
 
     // Return true if any ray intersects with an object in the scene
@@ -70,6 +70,7 @@ const FpvCamera = ({ vehicleRef, started } : FpvCameraProps) => {
         return true;
       }
     }
+    
     return false;
   };
 
@@ -110,7 +111,7 @@ const FpvCamera = ({ vehicleRef, started } : FpvCameraProps) => {
       gl.domElement.removeEventListener("mouseup", handleMouseUp);
       gl.domElement.removeEventListener("mousemove", handleMouseMove);
     };
-  }, [gl.domElement, isDragging, started]);
+  }, [gl.domElement, isDragging, started, camera.rotation, rotationSpeed]);
 
   useFrame(() => {
     if (started) return;

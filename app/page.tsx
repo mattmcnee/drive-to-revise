@@ -24,7 +24,7 @@ export default async function Home() {
 
 
 
-          <h2 className={styles.dataTitle}>What's new today?</h2>
+          <h2 className={styles.dataTitle}>What&apos;s new today?</h2>
           <ul className={styles.dataRow}>
             {datasets.map((dataset, index) => (
               <li key={dataset.firestoreId}>
@@ -35,7 +35,7 @@ export default async function Home() {
 
           <h2 className={styles.dataTitle}>Just keep driving...</h2>
           <p>
-            And let our AI do the rest. We'll generate questions automatically from your revision notes and create your very own custom game. Answer questions right to keep your speed and keep racking up those miles! Answer questions wrong and our AI will help you every step of the way.
+            And let our AI do the rest. We&apos;ll generate questions automatically from your revision notes and create your very own custom game. Answer questions right to keep your speed and keep racking up those miles! Answer questions wrong and our AI will help you every step of the way.
           </p>
           <br/>
           <p>
@@ -43,7 +43,7 @@ export default async function Home() {
           </p>
           <br/>
           <p>
-            We're open source too so you can find everything on how this works in our <Link href="https://github.com/mattmcnee">GitHub repository</Link>.
+            We&apos;re open source too so you can find everything on how this works in our <Link href="https://github.com/mattmcnee">GitHub repository</Link>.
           </p>
         </div>
       </div>
