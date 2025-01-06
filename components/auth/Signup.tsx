@@ -77,17 +77,6 @@ const SignupPage = () => {
       <h2>Create an account</h2>
       <form onSubmit={handleSignup} className={styles.signupForm}>
         <FormInput
-          name="nickname"
-          label="Username"
-          type="text"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-          placeholder="What should we call you?"
-          required
-          autoComplete="text"
-        />
-        
-        <FormInput
           name="email"
           label="Email"
           type="email"
@@ -96,6 +85,17 @@ const SignupPage = () => {
           placeholder="Enter your email"
           required
           autoComplete="new-username"
+        />
+
+        <FormInput
+          name="nickname"
+          label="Nickname"
+          type="text"
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
+          placeholder="What should we call you?"
+          required
+          autoComplete="text"
         />
 
         <FormInput
