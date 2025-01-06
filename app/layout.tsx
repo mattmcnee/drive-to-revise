@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { ToastContainer } from "react-toastify";
-import "./globals.css";
+import "./globals.scss";
 
 import { Exo_2 } from "next/font/google";
 
