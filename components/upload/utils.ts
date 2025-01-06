@@ -104,10 +104,10 @@ export const getTextEmbeddingAsync = async (chunk: string) => {
 };
 
 const isValidQuestion = (question: any): question is Question =>
-  typeof question.answer === 'string' &&
-  typeof question.question === 'string' &&
-  typeof question.dummy === 'string' &&
-  (question.id === undefined || typeof question.id === 'string');
+  typeof question.answer === "string" &&
+  typeof question.question === "string" &&
+  typeof question.dummy === "string" &&
+  (question.id === undefined || typeof question.id === "string");
 
 // Returns any valid questions for a valid array or [] otherwise
 const getValidQuestions = (questions: any[]): Question[] => {

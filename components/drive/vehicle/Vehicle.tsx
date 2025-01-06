@@ -5,6 +5,7 @@ import { Mesh, Vector3, CubicBezierCurve3, Group } from "three";
 import { RoadData, Segment, getSidewaysRotation } from "@/components/drive/utils";
 import FpvCamera from "./FpvCamera";
 import VehicleModel from "./VehicleModel";
+import { toast } from "react-toastify";
 
 interface VehicleProps {
   roadData: RoadData,
@@ -184,7 +185,7 @@ const Vehicle = ({
             
             return 0;
           } else {
-            alert("Reached the end of the segment!");
+            toast.warn("Reached the end of the road!");            
             
             return 1;
           }

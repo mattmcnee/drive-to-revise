@@ -55,8 +55,6 @@ const Scene = ({ inputData }: SceneProps) => {
     }
   );
 
-  console.log("Render Scene");
-
   const createInitialSegment = () => {
     const segment = generateRoadSegment();
     setRoadData(prevData => ({
@@ -157,7 +155,6 @@ const Scene = ({ inputData }: SceneProps) => {
 
     if (!segment.hasGates || !segment.questions) {
       const nextQuestionUi = getNextSegmentsFirstQuestion(segmentIndex, roadData);
-      console.log("Next question UI", nextQuestionUi);
       if (nextQuestionUi){
         setGameState(prevGameState => ({
           ...prevGameState,
@@ -169,7 +166,6 @@ const Scene = ({ inputData }: SceneProps) => {
     }
 
     const nextQuestionUi = getNextQuestion(questionIndex, segmentIndex, roadData);
-    console.log("Next question UI", nextQuestionUi);
     if (nextQuestionUi){
       setGameState(prevGameState => ({
         ...prevGameState,
@@ -180,14 +176,12 @@ const Scene = ({ inputData }: SceneProps) => {
     const answerLeft = segment.questions[questionIndex].answerLeft;
 
     if (answerLeft && currentOffset < -0.2 || !answerLeft && currentOffset > 0.2) {
-      console.log("Correct answer");
     } else {
       setGameState(prevGameState => ({
         ...prevGameState,
         accelerateVehicle: false,
         questionFailed: segment.questions?.[questionIndex] || null
       }));
-      console.log("Incorrect answer");
     }
   };
 

@@ -54,7 +54,7 @@ export const createUserDocument = async (userId: string, username: string): Prom
     };
 
     await setDoc(doc(db, "users", userId), userDoc);
-    console.log(`User document created with ID: ${userId}`);
+    // console.log(`User document created with ID: ${userId}`);
   } catch (error) {
     console.error("Error creating user document:", error);
     throw error;
@@ -70,7 +70,6 @@ export const getUsername = async (userId: string): Promise<string> => {
       const data = docSnap.data();
       return data.public.username;
     } else {
-      console.log("No such document!");
       return "";
     }
   } catch (error) {
@@ -102,7 +101,7 @@ export const createDatasetDocument = async (userId: string, data: UploadData): P
   try {
     const newDocRef = doc(collection(db, "datasets"));
     await setDoc(newDocRef, docData);
-    console.log("Question set document created with ID:", newDocRef.id);
+    // console.log("Question set document created with ID:", newDocRef.id);
     return newDocRef.id;
 
 
@@ -121,7 +120,6 @@ export const getPermissionLevel = async (userId: string): Promise<string> => {
       const data = docSnap.data();
       return data.subscription;
     } else {
-      console.log("No such document!");
       return "";
     }
   } catch (error) {
@@ -140,7 +138,6 @@ export const getDatasetDocument = async (docId: string): Promise<DatasetDocument
       data.firestoreId = docId;
       return data;
     } else {
-      console.log("No such document!");
       return null;
     }
   } catch (error) {

@@ -1,6 +1,6 @@
-import { useState, useEffect } from 'react';
-import app from './config';
-import { createUserDocument } from './firestoreInterface';
+import { useState, useEffect } from "react";
+import app from "./config";
+import { createUserDocument } from "./firestoreInterface";
 import { 
   getAuth, 
   Auth, 
@@ -9,7 +9,7 @@ import {
   signOut, 
   UserCredential, 
   User 
-} from 'firebase/auth';
+} from "firebase/auth";
 
 export function useAuth() {
   const auth: Auth = getAuth(app);
@@ -32,9 +32,9 @@ export function useAuth() {
     try {
       const userCredential: UserCredential = await signInWithEmailAndPassword(auth, email, password);
       setUser(userCredential.user);
-      return { status: 'success', code: '' };
+      return { status: "success", code: "" };
     } catch (error: any) {
-      return { status: 'error', code: error.code };
+      return { status: "error", code: error.code };
     }
   };
 
@@ -43,9 +43,9 @@ export function useAuth() {
     try {
       await signOut(auth);
       setUser(null);
-      return { status: 'success', code: '' };
+      return { status: "success", code: "" };
     } catch (error: any) {
-      return { status: 'error', code: error.code };
+      return { status: "error", code: error.code };
     }
   };
 
@@ -57,9 +57,9 @@ export function useAuth() {
       // Populates with initial account details
       createUserDocument(userCredential.user.uid, username);
       setUser(userCredential.user);
-      return { status: 'success', code: '' };
+      return { status: "success", code: "" };
     } catch (error: any) {
-      return { status: 'error', code: error.code };
+      return { status: "error", code: error.code };
     } finally {
       setLoading(false);
     }

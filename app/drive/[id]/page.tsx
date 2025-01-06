@@ -35,7 +35,7 @@ export default function Page() {
   return (
     <>
       {(loading || !data || dataLoading || !user) && 
-      <LoadingScreen loading={(user != null)}/>
+      <LoadingScreen loading={(loading || user != null)}/>
       }
       {data &&
       <Scene inputData={data} />

@@ -27,7 +27,6 @@ export const getTopSimilarEmbeddingsAsync = async (embeddings: TextEmbedding[], 
 const validateInstructions = "You validate whether a user has understood a concept, returning either True or False.";
 export const validateUserUnderstandsAsync = async (question : Question, input: string, similarEmbeddings: TextEmbedding[], currentMessages: any[]) => {
   const similarTexts = similarEmbeddings.map(embedding => embedding.text);
-  console.log(similarTexts);
 
   const model = "gpt-4o-mini";
   const temperature = 0.3;
@@ -80,8 +79,6 @@ If the user is asking for help, return: False`;
       if (message === "") return {valid: true, message: "AI currently unavailable"};
     }
 
-    console.log(message);
-
     return {valid: isValid, message: message};
   } catch (error) {
     console.error("Error fetching chat completion:", error);
@@ -97,8 +94,6 @@ export const explainConceptAsync = async (question: Question, currentMessages: a
   const newMessages = currentMessages
     .filter(message => message.role === "user" || message.role === "assistant")
     .slice(-5);
-
-  console.log(newMessages);
 
   const prompt = "hello";
 

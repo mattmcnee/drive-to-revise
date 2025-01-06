@@ -85,7 +85,6 @@ const Chatbot = ({startGame, embeddings, question} : ChatbotProps)  => {
         { role: "assistant", content: message },
       ]);
     }
-    console.log(message);
   };
   
 

@@ -159,7 +159,6 @@ export const getNextQuestion = (questionIndex: number, segmentIndex: number, roa
   const currentQuestions = roadData.segments[segmentIndex].questions;
   if (currentQuestions && questionIndex + 1 < currentQuestions.length) {
     const nextQuestion = currentQuestions[questionIndex + 1];
-    console.log("Next question", nextQuestion);
     if (nextQuestion) {
       return createQuestionUI(nextQuestion, questionIndex + 1);
     }

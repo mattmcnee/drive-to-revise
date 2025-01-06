@@ -14,7 +14,6 @@ const AdminPanelPage = () => {
     if (user) {
       getPermissionLevel(user.uid).then((permissionLevel) => {
         setPermissionLevel(permissionLevel);
-        console.log(permissionLevel);
       });
     }
   }, [user, loading]);
