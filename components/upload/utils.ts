@@ -19,7 +19,7 @@ export interface Section {
 
 export interface TextEmbedding {
   text: string;
-  value: string;
+  value: number[];
 }
 
 const questionGenerationInstructions = "You generate questions with an answer and a dummy (incorrect) answer. Your output MUST ALWAYS be a JSON array.";

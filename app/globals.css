@@ -62,5 +62,5 @@ li {
 }
 
 ::-webkit-scrollbar-track {
-  background: var(--main-background-color);
+  background: transparent;
 }

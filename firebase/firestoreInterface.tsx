@@ -17,6 +17,7 @@ import {
   DocumentData
 } from "firebase/firestore";
 import { UploadData } from "@/components/upload/UploadContext";
+import { TextEmbedding } from "@/components/upload/utils";
 
 const db: Firestore = getFirestore(app);
 
@@ -29,7 +30,7 @@ interface DatasetQuestion {
 
 export interface DatasetDocument {
   questions: DatasetQuestion[];
-  embeddings: { name: string; value: string }[];
+  embeddings: TextEmbedding[];
   metadata: {
     iconShape: string;
     username: string;
@@ -86,14 +87,9 @@ export const createDatasetDocument = async (userId: string, data: UploadData): P
     username = "anonymous";
   }
 
-  const stingifiedEmbeddings = data.embeddings.map((embedding) => {
-    embedding.value = JSON.stringify(embedding.value);
-    return embedding;
-  });
-
   const docData = {
     questions: data.questions,
-    embeddings: stingifiedEmbeddings,
+    embeddings: data.embeddings,
     metadata: {
       iconShape: data.metadata.iconShape,
       username: username,

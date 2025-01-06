@@ -1,13 +1,15 @@
 import React, { useEffect, useState, useRef } from 'react';
 import styles from './Chatbot.module.scss';
-import { PrimaryButton, TertiaryIconButton } from '@/components/ui/Buttons';
+import { TertiaryIconButton } from '@/components/ui/Buttons';
+import { TextEmbedding } from '@/components/upload/utils';
 import { Question, VehicleModel } from '../utils';
 import sendIcon from '@/public/icons/send.svg';
 import Image from 'next/image';
-import { validateUserUnderstandsAsync } from './chatbotInterface';
+import { validateUserUnderstandsAsync, getTopSimilarEmbeddingsAsync } from './chatbotInterface';
 
 interface ChatbotProps {
   startGame: (vehicleType: "default" | VehicleModel) => void;
+  embeddings: TextEmbedding[];
   question: Question;
 }
 
@@ -22,16 +24,24 @@ const AssistantMessage = ({ content }: { content: string }) => {
   );
 };
 
-const Chatbot = ({startGame, question} : ChatbotProps)  => {
+const Chatbot = ({startGame, embeddings, question} : ChatbotProps)  => {
   const [questions, setQuestions] = useState<{ role: string; content: string }[]>([]);
   const [inputText, setInputText] = useState("");
+  const similarEmbeddingsRef = useRef<TextEmbedding[]>([]);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
+
+  const logEmbeddings = async () => {
+    const newEmbeddings = await getTopSimilarEmbeddingsAsync(embeddings, question);
+    similarEmbeddingsRef.current = newEmbeddings;
+  }
 
   useEffect(() => {
     setQuestions([
       {role: "ui", content: `Explain why "${question.answer}" is the correct answer to get started again`},
       {role: "ui", content: "Or, ask me for help and I'll explain it from your notes"}
     ]);
+
+    logEmbeddings();
     
   }, [question]);
 
@@ -47,8 +57,20 @@ const Chatbot = ({startGame, question} : ChatbotProps)  => {
     const updatedQuestions = [...questions, { role: "user", content: inputText }, { role: "ui", content: "..." }];
     setQuestions(updatedQuestions); 
     setInputText("");
+    
+    // Use a promise that resolves when similarEmbeddings are returned
+    if (similarEmbeddingsRef.current.length === 0) {
+      await new Promise(resolve => {
+        const checkEmbeddings = setInterval(() => {
+          if (similarEmbeddingsRef.current.length > 0) {
+            clearInterval(checkEmbeddings);
+            resolve(null);
+          }
+        }, 100);
+      });
+    }
 
-    const {valid, message} = await validateUserUnderstandsAsync(question, inputText);
+    const {valid, message} = await validateUserUnderstandsAsync(question, inputText, similarEmbeddingsRef.current, updatedQuestions);
     const filteredQuestions = updatedQuestions.filter(q => q.content !== "...");
     if (valid) {
       setQuestions([

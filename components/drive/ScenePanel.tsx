@@ -61,7 +61,7 @@ const ScenePanel = ({ gameState, startGame, dataset }: ScenePanelProps) => {
 
       ) : (
       gameState.questionFailed ? (
-        <Chatbot startGame={startGame} question={gameState.questionFailed} />
+        <Chatbot startGame={startGame} question={gameState.questionFailed} embeddings={dataset.embeddings} />
       ) : (
         <div className={styles.questionContainer}>
           <div className={styles.questionHeader}>{question.question}</div>
