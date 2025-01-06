@@ -1,0 +1,32 @@
+.profilePage{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 14px;
+
+  .pageTitle{
+    margin-bottom: 16px;
+  }
+
+  .pageSubtitle{
+    margin-bottom: 16px;
+  }
+}
+
+.datasetList {
+  display: inline-flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 20px;
+  max-width: 1000px;
+  margin: 0 auto 0 auto;
+  width: fit-content;
+}
+
+@media (max-width: 768px){
+  .datasetList{
+    flex-direction: column;
+    width: 100%;
+  }
+}
