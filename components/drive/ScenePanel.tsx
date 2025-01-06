@@ -1,7 +1,7 @@
 import React from "react";
 import { PrimaryButton } from "@/components/ui/Buttons";
 import styles from "./ScenePanel.module.scss";
-import { GameState, VehicleModel } from "@/components/drive/utils";
+import { GameState } from "@/components/drive/utils";
 import Image from "next/image";
 
 import circleIcon from "@/public/icons/shapes/circle.svg";
@@ -10,6 +10,15 @@ import triangleIcon from "@/public/icons/shapes/triangle.svg";
 import diamondIcon from "@/public/icons/shapes/diamond.svg";
 import pentagonIcon from "@/public/icons/shapes/pentagon.svg";
 import hexagonIcon from "@/public/icons/shapes/hexagon.svg";
+
+import homeIcon from "@/public/icons/home.svg";
+
+import { TextEmbedding } from "../upload/utils";
+import { VehicleModel } from "@/components/drive/utils";
+
+import { TertiaryIconButton } from "@/components/ui/Buttons";
+
+import { DatasetDocument } from "@/firebase/firestoreInterface";
 
 const iconMap: { [key: string]: string } = {
   circle: circleIcon,
@@ -22,22 +31,36 @@ const iconMap: { [key: string]: string } = {
 
 interface ScenePanelProps {
   gameState: GameState;
-  startGame: (model: VehicleModel | "default") => void;
+  startGame: (vehicleType: "default" | VehicleModel) => void;
+  dataset: DatasetDocument;
 }
 
-const ScenePanel = ({ gameState, startGame }: ScenePanelProps) => {
+const ScenePanel = ({ gameState, startGame, dataset }: ScenePanelProps) => {
   const question = gameState.displayedQuestion || {question: "", left: {text: "", icon: "hexagon"}, right: {text: "", icon: "hexagon"}};
-  
+
   return (
     <div className={styles.panelContainer}>
-      {!gameState.started && (
-        <PrimaryButton onClick={() => startGame("family_car")}>Start Game</PrimaryButton>
-      )}
-      {gameState.questionFailed ? (
-        <div className={styles.questionHeader}>
-          <h3>Wrong Answer</h3>
-          <PrimaryButton onClick={() => startGame("default")}>Try Again</PrimaryButton>
+      <div className={styles.panelHeader}>
+        <div className={styles.panelHeaderIcon}>
+            <TertiaryIconButton onClick={() => window.location.href = "/"}>
+            <Image src={homeIcon} alt="home" width={24} height={24} />
+            </TertiaryIconButton>
         </div>
+        <h2 className={styles.panelTitle}>{dataset.metadata.title}</h2>
+      </div>
+      {!gameState.started ? (
+        <div className={styles.welcomePanel}>
+          <h3 className={styles.welcomeTitle}>Choose a vehicle speed to start</h3>
+        <div className={styles.welcomeOptions}>
+        <PrimaryButton onClick={() => startGame("muscle_car")}>Fast</PrimaryButton>
+        <PrimaryButton onClick={() => startGame("old_car")}>Medium</PrimaryButton>
+        <PrimaryButton onClick={() => startGame("family_car")}>Slow</PrimaryButton>
+        </div>
+        </div>
+
+      ) : (
+      gameState.questionFailed ? (
+        <PrimaryButton onClick={() => startGame("default")}>Try again</PrimaryButton>
       ) : (
         <div className={styles.questionContainer}>
           <div className={styles.questionHeader}>{question.question}</div>
@@ -53,7 +76,7 @@ const ScenePanel = ({ gameState, startGame }: ScenePanelProps) => {
           </div>
 
         </div>
-      )}
+      ))}
     </div>
   );
 };

@@ -239,7 +239,7 @@ const Scene = ({ inputData }: SceneProps) => {
       </Canvas>
 
       <div className={styles.sceneOverlay}>
-        <ScenePanel gameState={gameState} startGame={startGame} />
+        <ScenePanel gameState={gameState} startGame={startGame} dataset={inputData} />
       </div>
     </div>
   );
