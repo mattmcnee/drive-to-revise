@@ -1,8 +1,8 @@
-import React from 'react';
-import Image from 'next/image';
-import styles from './QuestionCard.module.scss';
-import deleteIcon from '@/public/icons/delete.svg';
-import { TertiaryIconButton } from '@/components/ui/Buttons';
+import React from "react";
+import Image from "next/image";
+import styles from "./QuestionCard.module.scss";
+import deleteIcon from "@/public/icons/delete.svg";
+import { TertiaryIconButton } from "@/components/ui/Buttons";
 
 interface QuestionCardProps {
     index: number;

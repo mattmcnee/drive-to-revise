@@ -10,14 +10,14 @@ const DatasetUpload = () => {
 
   return (
     <>
-    {(loading || !user) &&
+      {(loading || !user) &&
       <LoadingScreen loading={(loading || user != null)}/>
-    }
-    {(state.status === "generating" || state.status === "review" || state.status === "submitted") ? (
-      <GeneratedQuestions />
-    ): (
-      <FileSlider />
-    )}
+      }
+      {(state.status === "generating" || state.status === "review" || state.status === "submitted") ? (
+        <GeneratedQuestions />
+      ) : (
+        <FileSlider />
+      )}
     </>
   );
 };

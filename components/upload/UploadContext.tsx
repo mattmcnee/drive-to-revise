@@ -1,5 +1,5 @@
 
-import React, { createContext, useContext, useReducer, Dispatch } from 'react';
+import React, { createContext, useContext, useReducer, Dispatch } from "react";
 import { Section, TextEmbedding, Question } from "@/components/upload/utils";
 
 export interface UploadData {
@@ -15,7 +15,8 @@ export interface UploadData {
 }
 
 const randomShape = () => {
-  const shapes = ['circle', 'square', 'triangle', 'diamond', 'pentagon', 'hexagon'];
+  const shapes = ["circle", "square", "triangle", "diamond", "pentagon", "hexagon"];
+  
   return shapes[Math.floor(Math.random() * shapes.length)];
 };
 
@@ -40,8 +41,8 @@ export type UploadAction =
 | { type: "ADD_EMBEDDINGS"; payload: TextEmbedding[] }
 | { type: "ADD_QUESTIONS"; payload: Question[] }
 | { type: "DELETE_QUESTION"; payload: number }
-| { type: 'SET_ICON_SHAPE'; payload: string }
-| { type: 'SET_TITLE'; payload: string };
+| { type: "SET_ICON_SHAPE"; payload: string }
+| { type: "SET_TITLE"; payload: string };
 
 // Updates the state based on the action dispatched
 export const reducer = (data: UploadData, action: UploadAction): UploadData => {
@@ -67,6 +68,7 @@ export const reducer = (data: UploadData, action: UploadAction): UploadData => {
   // Delete a question from the .questions array
   case "DELETE_QUESTION":
     const updatedQuestions = data.questions.filter((_, idx) => idx !== action.payload);
+    
     return { ...data, questions: updatedQuestions };
 
     // Add embeddings to the .embeddings array
@@ -77,11 +79,11 @@ export const reducer = (data: UploadData, action: UploadAction): UploadData => {
   case "ADD_QUESTIONS":
     return { ...data, questions: [...data.questions, ...action.payload] };
 
-    case 'SET_ICON_SHAPE':
-      return { ...data, metadata: { ...data.metadata, iconShape: action.payload } };
+  case "SET_ICON_SHAPE":
+    return { ...data, metadata: { ...data.metadata, iconShape: action.payload } };
   
-    case 'SET_TITLE':
-      return { ...data, metadata: { ...data.metadata, title: action.payload } };
+  case "SET_TITLE":
+    return { ...data, metadata: { ...data.metadata, title: action.payload } };
   
     
   default:
@@ -103,7 +105,8 @@ export const UploadContext = createContext<UploadContextType | undefined>(undefi
 export const useUploadContext = () => {
   const context = useContext(UploadContext);
   if (!context) {
-    throw new Error('useUploadContext must be used within an UploadProvider');
+    throw new Error("useUploadContext must be used within an UploadProvider");
   }
+  
   return context;
 };

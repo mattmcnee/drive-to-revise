@@ -1,25 +1,25 @@
-import React from 'react';
-import QuestionCard from './QuestionCard';
+import React from "react";
+import QuestionCard from "./QuestionCard";
 
-import { useUploadContext } from '@/components/upload/UploadContext';
-import LoadingOrSubmit from '@/components/upload/questions/LoadingOrSubmit';
-import styles from './GeneratedQuestions.module.scss';
-import ShapeIconClickable from '@/components/ui/ShapeIconClickable';
+import { useUploadContext } from "@/components/upload/UploadContext";
+import LoadingOrSubmit from "@/components/upload/questions/LoadingOrSubmit";
+import styles from "./GeneratedQuestions.module.scss";
+import ShapeIconClickable from "@/components/ui/ShapeIconClickable";
 
 const GeneratedQuestions = () => {
   const { state, dispatch , saveToFirestore } = useUploadContext();
 
   const deleteQuestionItem = (index: number) => {
-    dispatch({ type: 'DELETE_QUESTION', payload: index });
-  }
+    dispatch({ type: "DELETE_QUESTION", payload: index });
+  };
 
   const updateIconShape = (shape: string) => {
-    dispatch({ type: 'SET_ICON_SHAPE', payload: shape });
-  }
+    dispatch({ type: "SET_ICON_SHAPE", payload: shape });
+  };
 
   const updateTitle = (title: string) => {
-    dispatch({ type: 'SET_TITLE', payload: title });
-  }
+    dispatch({ type: "SET_TITLE", payload: title });
+  };
 
   return (
     <div className={styles.embeddingCont}>

@@ -1,5 +1,5 @@
-import Loading from '@/components/ui/Loading';
-import { PrimaryButton } from '@/components/ui/Buttons';
+import Loading from "@/components/ui/Loading";
+import { PrimaryButton } from "@/components/ui/Buttons";
 
 interface LoadingOrSubmitProps {
     status: string;
@@ -19,7 +19,7 @@ const LoadingOrSubmit = ({ status, onSubmit }: LoadingOrSubmitProps) => {
         )
       )}
     </div>
-  )
-}
+  );
+};
 
 export default LoadingOrSubmit;
