@@ -1,7 +1,7 @@
 import axios from "axios";
 import { toast } from "react-toastify";
-import { Question } from '../utils';
-import { TextEmbedding, getTextEmbeddingAsync } from '@/components/upload/utils';
+import { Question } from "../utils";
+import { TextEmbedding, getTextEmbeddingAsync } from "@/components/upload/utils";
 
 const getTopSimilarVectors = (embeddings: TextEmbedding[], target: TextEmbedding, k = 3) => {
   const dotProduct = (a: number[], b: number[]) => a.reduce((sum, ai, i) => sum + ai * b[i], 0);
@@ -14,14 +14,15 @@ const getTopSimilarVectors = (embeddings: TextEmbedding[], target: TextEmbedding
   similarities.sort((a, b) => b.similarity - a.similarity);
 
   return similarities.slice(0, k).map(similarity => similarity.embedding);
-}
+};
 
 export const getTopSimilarEmbeddingsAsync = async (embeddings: TextEmbedding[], question: Question, k = 3) => {
   const text = `${question.question} ${question.answer} ${question.dummy}`;
   const target = await getTextEmbeddingAsync(text);
   const similarEmbeddings = getTopSimilarVectors(embeddings, target, k);
+  
   return similarEmbeddings;
-}
+};
 
 const validateInstructions = "You validate whether a user has understood a concept, returning either True or False.";
 export const validateUserUnderstandsAsync = async (question : Question, input: string, similarEmbeddings: TextEmbedding[], currentMessages: any[]) => {
@@ -72,7 +73,7 @@ If the user is asking for help, return: False`;
     );
 
     let message = response.data.message;
-    const isValid = message.toLowerCase().replace('.', '').includes("true");
+    const isValid = message.toLowerCase().replace(".", "").includes("true");
 
     if (!isValid) {
       message = await explainConceptAsync(question, currentMessages, similarEmbeddings);
@@ -143,6 +144,7 @@ Do not remind the user that they can restart the game unless you have explained 
     );
 
     const explanation = response.data.message;
+    
     return explanation;
   } catch (error) {
     console.error("Error fetching chat completion:", error);

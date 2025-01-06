@@ -43,41 +43,41 @@ const ScenePanel = ({ gameState, startGame, dataset }: ScenePanelProps) => {
     <div className={styles.panelContainer}>
       <div className={styles.panelHeader}>
         <div className={styles.panelHeaderIcon}>
-            <TertiaryIconButton onClick={() => window.location.href = "/"}>
+          <TertiaryIconButton onClick={() => window.location.href = "/"}>
             <Image src={homeIcon} alt="home" width={24} height={24} />
-            </TertiaryIconButton>
+          </TertiaryIconButton>
         </div>
         <h2 className={styles.panelTitle}>{dataset.metadata.title}</h2>
       </div>
       {!gameState.started ? (
         <div className={styles.welcomePanel}>
           <h3 className={styles.welcomeTitle}>Choose a vehicle speed to start</h3>
-        <div className={styles.welcomeOptions}>
-        <PrimaryButton onClick={() => startGame("muscle_car")}>Fast</PrimaryButton>
-        <PrimaryButton onClick={() => startGame("old_car")}>Medium</PrimaryButton>
-        <PrimaryButton onClick={() => startGame("family_car")}>Slow</PrimaryButton>
-        </div>
-        </div>
-
-      ) : (
-      gameState.questionFailed ? (
-        <Chatbot startGame={startGame} question={gameState.questionFailed} embeddings={dataset.embeddings} />
-      ) : (
-        <div className={styles.questionContainer}>
-          <div className={styles.questionHeader}>{question.question}</div>
-          <div className={styles.questionAnswers}>
-            <div className={styles.answerBox}>
-              <Image src={iconMap[question.left.icon]} alt={question.left.icon} width={24} height={24} />
-              <span className={styles.answerText}>{question.left.text}</span>
-            </div>
-            <div className={styles.answerBox}>
-              <Image src={iconMap[question.right.icon]} alt={question.right.icon} width={24} height={24} />
-              <span className={styles.answerText}>{question.right.text}</span>
-            </div>
+          <div className={styles.welcomeOptions}>
+            <PrimaryButton onClick={() => startGame("muscle_car")}>Fast</PrimaryButton>
+            <PrimaryButton onClick={() => startGame("old_car")}>Medium</PrimaryButton>
+            <PrimaryButton onClick={() => startGame("family_car")}>Slow</PrimaryButton>
           </div>
-
         </div>
-      ))}
+
+      ) : (
+        gameState.questionFailed ? (
+          <Chatbot startGame={startGame} question={gameState.questionFailed} embeddings={dataset.embeddings} />
+        ) : (
+          <div className={styles.questionContainer}>
+            <div className={styles.questionHeader}>{question.question}</div>
+            <div className={styles.questionAnswers}>
+              <div className={styles.answerBox}>
+                <Image src={iconMap[question.left.icon]} alt={question.left.icon} width={24} height={24} />
+                <span className={styles.answerText}>{question.left.text}</span>
+              </div>
+              <div className={styles.answerBox}>
+                <Image src={iconMap[question.right.icon]} alt={question.right.icon} width={24} height={24} />
+                <span className={styles.answerText}>{question.right.text}</span>
+              </div>
+            </div>
+
+          </div>
+        ))}
     </div>
   );
 };

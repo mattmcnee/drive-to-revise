@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import Scene from "@/components/drive/Scene";
 import { useAuth } from "@/firebase/useAuth";
 import { getDatasetDocument, DatasetDocument } from "@/firebase/firestoreInterface";
-import LoadingScreen from '@/components/ui/LoadingScreen';
+import LoadingScreen from "@/components/ui/LoadingScreen";
 
 import { useParams } from "next/navigation";
 
@@ -34,12 +34,12 @@ export default function Page() {
 
   return (
     <>
-    {(loading || !data || dataLoading) && 
+      {(loading || !data || dataLoading) && 
       <LoadingScreen loading={true}/>
-    }
-    {data &&
+      }
+      {data &&
       <Scene inputData={data} />
-    }
+      }
     </>
   );
 }

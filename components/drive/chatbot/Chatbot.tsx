@@ -1,11 +1,11 @@
-import React, { useEffect, useState, useRef } from 'react';
-import styles from './Chatbot.module.scss';
-import { TertiaryIconButton } from '@/components/ui/Buttons';
-import { TextEmbedding } from '@/components/upload/utils';
-import { Question, VehicleModel } from '../utils';
-import sendIcon from '@/public/icons/send.svg';
-import Image from 'next/image';
-import { validateUserUnderstandsAsync, getTopSimilarEmbeddingsAsync } from './chatbotInterface';
+import React, { useEffect, useState, useRef, useCallback } from "react";
+import styles from "./Chatbot.module.scss";
+import { TertiaryIconButton } from "@/components/ui/Buttons";
+import { TextEmbedding } from "@/components/upload/utils";
+import { Question, VehicleModel } from "../utils";
+import sendIcon from "@/public/icons/send.svg";
+import Image from "next/image";
+import { validateUserUnderstandsAsync, getTopSimilarEmbeddingsAsync } from "./chatbotInterface";
 
 interface ChatbotProps {
   startGame: (vehicleType: "default" | VehicleModel) => void;
@@ -15,6 +15,7 @@ interface ChatbotProps {
 
 const AssistantMessage = ({ content }: { content: string }) => {
   const splits = content.split("\n").filter(split => split.length > 0);
+  
   return (
     <>
       {splits.map((split, idx) => (
@@ -30,10 +31,10 @@ const Chatbot = ({startGame, embeddings, question} : ChatbotProps)  => {
   const similarEmbeddingsRef = useRef<TextEmbedding[]>([]);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
 
-  const logEmbeddings = async () => {
+  const logEmbeddings = useCallback(async () => {
     const newEmbeddings = await getTopSimilarEmbeddingsAsync(embeddings, question);
     similarEmbeddingsRef.current = newEmbeddings;
-  }
+  }, [embeddings, question]);
 
   useEffect(() => {
     setQuestions([
@@ -43,7 +44,7 @@ const Chatbot = ({startGame, embeddings, question} : ChatbotProps)  => {
 
     logEmbeddings();
     
-  }, [question]);
+  }, [question, logEmbeddings]);
 
   useEffect(() => {
     if (scrollContainerRef.current) {
@@ -117,7 +118,7 @@ const Chatbot = ({startGame, embeddings, question} : ChatbotProps)  => {
           className={styles.input} 
           value={inputText} 
           onChange={(e) => setInputText(e.target.value)} 
-          onKeyDown={(e) => e.key === 'Enter' && handleSubmit()}
+          onKeyDown={(e) => e.key === "Enter" && handleSubmit()}
         />
         <TertiaryIconButton onClick={handleSubmit}>
           <Image src={sendIcon} alt="send" width={24} height={24} className={styles.sendIcon}/>
