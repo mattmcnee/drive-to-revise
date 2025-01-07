@@ -27,6 +27,7 @@ Answers MUST BE less than 5 words and MUST BE less than 5 mathematical symbols. 
  
 Here is the target content:\n\n`;
 
+// Randomly generated new ID
 const generateNewId = (length = 20) => {
   const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
   let result = "";
@@ -38,6 +39,7 @@ const generateNewId = (length = 20) => {
   return result;
 };
 
+// Split document using langchain recursive text splitter
 export const getChunkedDataAsync = async (text: string, chunkSize = 512, chunkOverlap = 128) => {
   const splitter = new RecursiveCharacterTextSplitter({
     chunkSize,
@@ -48,6 +50,7 @@ export const getChunkedDataAsync = async (text: string, chunkSize = 512, chunkOv
   return await splitter.splitText(text);
 };
 
+// Create batches of chunks for processing
 export const getBatchedChunks = (chunks: string[], batchSize = 8) => {
   const batchedChunks = [];
   for (let i = 0; i < chunks.length; i += batchSize) {
@@ -57,6 +60,7 @@ export const getBatchedChunks = (chunks: string[], batchSize = 8) => {
   return batchedChunks;
 };
 
+// Fetch text embedding for a chunk
 export const getTextEmbeddingAsync = async (chunk: string) => {
   try {
     const response = await axios.post(
@@ -84,6 +88,7 @@ export const getTextEmbeddingAsync = async (chunk: string) => {
   }
 };
 
+// Validate a question object
 const isValidQuestion = (question: any): question is Question =>
   typeof question.answer === "string" &&
   typeof question.question === "string" &&
@@ -99,6 +104,7 @@ const getValidQuestions = (questions: any[]): Question[] => {
   }
 };
 
+// Fetch generated questions for a chunk
 export const getGeneratedQuestionAsync = async (text: string) => {
   const model = "gpt-4o-mini";
   const temperature = 0.3;
@@ -120,6 +126,7 @@ export const getGeneratedQuestionAsync = async (text: string) => {
       }
     );
 
+    // Parse JSON questions and validate them
     const message = response.data.message;
     const questions = JSON.parse(message.replace(/^```(?:json)?\n|\n```$/g, "").trim());
     const validQuestions = getValidQuestions(questions);
@@ -137,7 +144,8 @@ export const getGeneratedQuestionAsync = async (text: string) => {
   }
 };
 
-
+// Process a batch of chunks
+// Handle both text embeddings and generated questions
 export const getQuestionsAndEmbeddingsAsync = async (batch: string[]) => {
   const embeddings: TextEmbedding[] = [];
   const questions: Question[] = [];
