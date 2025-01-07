@@ -2,7 +2,8 @@
 import React, { useEffect, useState } from "react";
 import Navbar from "@/components/ui/Navbar";
 import { useAuth } from "@/firebase/useAuth";
-import { getPaginatedDatasets, DatasetDocument, getUsername } from "@/firebase/firestoreInterface";
+import { getPaginatedDatasets, getUsername } from "@/firebase/firestoreInterface";
+import { DatasetDocument } from "@/types/index.types";
 import DatasetCard from "@/components/ui/DatasetCard";
 import styles from "./page.module.scss";
 

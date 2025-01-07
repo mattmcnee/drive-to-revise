@@ -1,7 +1,6 @@
 import React, { useRef } from "react";
 import { Extrude } from "@react-three/drei";
-import { Shape, Vector3, Mesh } from "three";
-import { useFrame } from "@react-three/fiber";
+import { Vector3, Mesh } from "three";
 import { 
   config, 
   getHexagonShape, 

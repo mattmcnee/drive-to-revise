@@ -1,7 +1,7 @@
 import React, { useRef, useEffect } from "react";
 import { Vector3, CubicBezierCurve3 } from "three";
 import Gate from "@/components/drive/road/Gate";
-import { Segment } from "@/components/drive/utils";
+import { Segment } from "@/types/index.types";
 
 interface GateSegmentProps {
   curve: CubicBezierCurve3
@@ -28,7 +28,7 @@ export const GateSegment = ({ curve, segment }: GateSegmentProps) => {
     return new Vector3(axis.x, axis.y, axis.z).multiplyScalar(angle);
   };    
   
-  const mirrorArray = segment.questions?.map((question) => question.isMirror) || [false, false, false];
+  const mirrorArray = segment.questions?.map((question) => question.isMirror ?? false) || [false, false, false];
 
   // Render gates at 1/3, 2/3, and end of the curve
   return (

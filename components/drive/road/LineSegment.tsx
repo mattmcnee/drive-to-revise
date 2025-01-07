@@ -16,7 +16,7 @@ interface LineSegmentProps {
 
 // A series of rectangular segments positioned along the curve
 export const LineSegment = ({ curve }: LineSegmentProps) => {
-  const lineRef = useRef<Mesh<BufferGeometry, any> | null>(null);
+  const lineRef = useRef<Mesh<BufferGeometry> | null>(null);
 
   useEffect(() => {
     if (!lineRef.current) return;

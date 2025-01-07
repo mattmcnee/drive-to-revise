@@ -16,30 +16,9 @@ import {
   QueryDocumentSnapshot,
   DocumentData
 } from "firebase/firestore";
-import { UploadData } from "@/components/upload/UploadContext";
-import { TextEmbedding } from "@/components/upload/utils";
+import { DatasetDocument, UploadData } from "@/types/index.types";
 
 const db: Firestore = getFirestore(app);
-
-interface DatasetQuestion {
-  question: string;
-  answer: string;
-  dummy: string;
-  id: string;
-}
-
-export interface DatasetDocument {
-  questions: DatasetQuestion[];
-  embeddings: TextEmbedding[];
-  metadata: {
-    iconShape: string;
-    username: string;
-    title: string;
-    created: string;
-  };
-  userId: string;
-  firestoreId?: string;
-}
 
 // Called in useAuth, creates user document on account creation
 export const createUserDocument = async (userId: string, username: string): Promise<void> => {
@@ -61,6 +40,7 @@ export const createUserDocument = async (userId: string, username: string): Prom
   }
 };
 
+// Called in DocumentUpload, fetches the username of the current user
 export const getUsername = async (userId: string): Promise<string> => {
   try {
     const userDoc = doc(db, "users", userId);
@@ -111,6 +91,7 @@ export const createDatasetDocument = async (userId: string, data: UploadData): P
   }
 };
 
+// Gets the permission level of a user
 export const getPermissionLevel = async (userId: string): Promise<string> => {
   try {
     const userDoc = doc(db, "users", userId);
@@ -128,6 +109,7 @@ export const getPermissionLevel = async (userId: string): Promise<string> => {
   }
 };
 
+// Fetches a dataset document by ID
 export const getDatasetDocument = async (docId: string): Promise<DatasetDocument | null> => {
   try {
     const docRef = doc(db, "datasets", docId);

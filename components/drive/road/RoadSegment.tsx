@@ -7,11 +7,12 @@ interface RoadSegmentProps {
 }
 
 const RoadSegment = ({ curve }: RoadSegmentProps) => {
-  const roadRef = useRef<Mesh<BufferGeometry, any> | null>(null);
+  const roadRef = useRef<Mesh<BufferGeometry> | null>(null);
 
   useEffect(() => {
     if (!roadRef.current) return;
 
+    // Create a new geometry to hold the road segment
     const roadGeometry = new BufferGeometry();
     const roadVertices: number[] = [];
     const indices: number[] = [];
@@ -22,10 +23,12 @@ const RoadSegment = ({ curve }: RoadSegmentProps) => {
       const direction = curve.getTangent(t).normalize();
       const perpendicular = new Vector3(-direction.z, 0, direction.x);
 
+      // Define the road offsets
       const offsetX = perpendicular.x * config.road.width;
       const offsetY = config.road.height;
       const offsetZ = perpendicular.z * config.road.width;
-            
+         
+      // Add 2 vertices to create a rectangle for this road segment
       roadVertices.push(
         point.x + offsetX, point.y + offsetY, point.z + offsetZ,
         point.x - offsetX, point.y + offsetY, point.z - offsetZ
@@ -40,6 +43,7 @@ const RoadSegment = ({ curve }: RoadSegmentProps) => {
       }
     }
 
+    // Set the road geometry attributes and compute normals
     roadGeometry.setAttribute("position", new Float32BufferAttribute(roadVertices, 3));
     roadGeometry.setIndex(indices);
     roadGeometry.computeVertexNormals();

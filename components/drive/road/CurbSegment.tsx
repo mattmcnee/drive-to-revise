@@ -8,7 +8,7 @@ interface CurbSegmentProps {
 }
 
 export const CurbSegment = ({ curve, isLeft }: CurbSegmentProps) => {
-  const curbRef = useRef<Mesh<BufferGeometry, any> | null>(null);
+  const curbRef = useRef<Mesh<BufferGeometry> | null>(null);
 
   useEffect(() => {
     if (!curbRef.current) return;
@@ -24,6 +24,7 @@ export const CurbSegment = ({ curve, isLeft }: CurbSegmentProps) => {
       const perpendicular = new Vector3(-direction.z, 0, direction.x);
       const sign = isLeft ? 1 : -1;
 
+      // Define the curb offsets
       const offsetXZ = config.road.width;
       const offsetY = config.road.height;
       const offsetCurbXZ = config.road.width + config.curb.width;
@@ -50,6 +51,7 @@ export const CurbSegment = ({ curve, isLeft }: CurbSegmentProps) => {
         curbVertices.push(x, y, z);
       });
 
+      // Create the curb indices for the current segment
       if (i < config.segmentDetail - 1) {
         const curbBaseIndex = i * 4;
         curbIndices.push(
@@ -63,6 +65,7 @@ export const CurbSegment = ({ curve, isLeft }: CurbSegmentProps) => {
       }
     }
 
+    // Set the curb geometry and material
     curbGeometry.setAttribute("position", new Float32BufferAttribute(curbVertices, 3));
     curbGeometry.setIndex(curbIndices);
     curbGeometry.computeVertexNormals();

@@ -58,7 +58,7 @@ export const TreeSegment = ({ curve, index }: TreeSegmentProps) => {
         // Grow new trees over 8 seconds
         const growAnimation = () => {
           const startTime = performance.now();
-          const duration = 8000;
+          const duration = 6000;
 
           const animate = (time: number) => {
             const elapsed = time - startTime;

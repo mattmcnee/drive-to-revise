@@ -1,21 +1,26 @@
 import axios from "axios";
 import { toast } from "react-toastify";
-import { Question } from "../utils";
-import { TextEmbedding, getTextEmbeddingAsync } from "@/components/upload/utils";
+import { getTextEmbeddingAsync } from "@/components/upload/utils";
+import { ChatMessage, Question, TextEmbedding } from "@/types/index.types";
 
+// Cosine vector search
 const getTopSimilarVectors = (embeddings: TextEmbedding[], target: TextEmbedding, k = 3) => {
+  // OpenAI embeddings are normalised so we can use the dot product
   const dotProduct = (a: number[], b: number[]) => a.reduce((sum, ai, i) => sum + ai * b[i], 0);
 
+  // Sort embeddings by similarity to target
   const similarities = embeddings.map(embedding => ({
     embedding,
     similarity: dotProduct(embedding.value, target.value)
   }));
-
   similarities.sort((a, b) => b.similarity - a.similarity);
 
+  // Return top k embeddings
   return similarities.slice(0, k).map(similarity => similarity.embedding);
 };
 
+// Convert question object to text and get embedding from OpenAI
+// Then use getTopSimilarVectors to get the top k similar embeddings
 export const getTopSimilarEmbeddingsAsync = async (embeddings: TextEmbedding[], question: Question, k = 3) => {
   const text = `${question.question} ${question.answer} ${question.dummy}`;
   const target = await getTextEmbeddingAsync(text);
@@ -24,14 +29,18 @@ export const getTopSimilarEmbeddingsAsync = async (embeddings: TextEmbedding[], 
   return similarEmbeddings;
 };
 
-const validateInstructions = "You validate whether a user has understood a concept, returning either True or False.";
-export const validateUserUnderstandsAsync = async (question : Question, input: string, similarEmbeddings: TextEmbedding[], currentMessages: any[]) => {
+// This is the first stage of a text response in the chat interface
+// The AI is asked to validate whether the user has understood a concept
+export const validateUserUnderstandsAsync = async (question : Question, input: string, similarEmbeddings: TextEmbedding[], currentMessages: ChatMessage[]) => {
   const similarTexts = similarEmbeddings.map(embedding => embedding.text);
 
+  // Use the GPT-4o-mini model to validate the user's understanding
   const model = "gpt-4o-mini";
   const temperature = 0.3;
   const max_tokens = 500;
 
+  // Prompt the AI with RAG data and intructions to validate the user's understanding
+  const validateInstructions = "You validate whether a user has understood a concept, returning either True or False.";
   const prompt = `The question is "${question.question}"
 The user previously answered incorrectly with "${question.dummy}".
 
@@ -74,6 +83,8 @@ If the user is asking for help, return: False`;
     let message = response.data.message;
     const isValid = message.toLowerCase().replace(".", "").includes("true");
 
+    // If the AI says the user hasn't understood: 
+    // Use explainConceptAsync to provide a chatbot response
     if (!isValid) {
       message = await explainConceptAsync(question, currentMessages, similarEmbeddings);
       if (message === "") return {valid: true, message: "AI currently unavailable"};
@@ -88,19 +99,24 @@ If the user is asking for help, return: False`;
   }
 };
 
-export const explainConceptAsync = async (question: Question, currentMessages: any[], similarEmbeddings: TextEmbedding[]) => {
+// This is the second stage of a text response in the chat interface
+// The AI is functioning as a chatbot to explain a concept to the user
+export const explainConceptAsync = async (question: Question, currentMessages: ChatMessage[], similarEmbeddings: TextEmbedding[]) => {
   const similarTexts = similarEmbeddings.map(embedding => embedding.text);
 
+  // Pass in the last 5 messages to the AI to provide context
+  // Filter out any messages that aren't from the user or assistant
+  // Messages just for the interface have role "ui"
   const newMessages = currentMessages
     .filter(message => message.role === "user" || message.role === "assistant")
     .slice(-5);
 
-  const prompt = "hello";
-
+  // Use the GPT-4o-mini model to explain a concept to the user
   const model = "gpt-4o-mini";
   const temperature = 0.3;
   const max_tokens = 500;
 
+  // Prompt the AI with RAG data and intructions to explain the concept
   const instructions = `You explain a concept to a user in up to three short sentences, separated by newlines. Each sentence must be less than 18 words.
 
 The user wants to know why the answer to "${question.question}" is "${question.answer}" as they incorrectly answered "${question.dummy}".

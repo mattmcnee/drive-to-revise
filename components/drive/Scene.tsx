@@ -1,21 +1,16 @@
 import React, { useRef, useState, useEffect, useCallback, use } from "react";
-import { Canvas, useFrame } from "@react-three/fiber";
-import { OrbitControls, Sky } from "@react-three/drei";
+import { Canvas } from "@react-three/fiber";
+import { Sky } from "@react-three/drei";
 import { Vector3 } from "three";
 import RoadContructor from "./road/RoadContructor";
-
-import { PrimaryButton } from "@/components/ui/Buttons";
-import { DatasetDocument } from "@/firebase/firestoreInterface";
+import { DatasetDocument, RoadData, GameState, VehicleModel } from "@/types/index.types";
 
 import styles from "./Scene.module.scss";
 
 import { 
-  RoadData, 
-  GameState, 
   generateRoadSegment, 
   getNextQuestion, 
   getNextSegmentsFirstQuestion,
-  VehicleModel
 } from "@/components/drive/utils";
 import Vehicle from "@/components/drive/vehicle/Vehicle";
 import ScenePanel from "@/components/drive/ScenePanel";

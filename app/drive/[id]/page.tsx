@@ -3,8 +3,9 @@
 import React, { useEffect, useState } from "react";
 import Scene from "@/components/drive/Scene";
 import { useAuth } from "@/firebase/useAuth";
-import { getDatasetDocument, DatasetDocument } from "@/firebase/firestoreInterface";
+import { getDatasetDocument } from "@/firebase/firestoreInterface";
 import LoadingScreen from "@/components/ui/LoadingScreen";
+import { DatasetDocument } from "@/types/index.types";
 
 import { useParams } from "next/navigation";
 

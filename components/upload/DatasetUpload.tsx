@@ -5,7 +5,7 @@ import GeneratedQuestions from "@/components/upload/questions/GeneratedQuestions
 import LoadingScreen from "@/components/ui/LoadingScreen";
 
 const DatasetUpload = () => {
-  const { state, generateEmbeddings } = useUploadContext();
+  const { state } = useUploadContext();
   const { user, loading } = useAuth();
 
   return (

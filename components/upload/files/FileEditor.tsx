@@ -5,7 +5,7 @@ import { toast } from "react-toastify";
 import deleteIcon from "@/public/icons/delete.svg";
 import uploadIcon from "@/public/icons/export.svg";
 
-import { useUploadContext } from "../UploadContext";
+import { useUploadContext } from "@/components/upload/UploadContext";
 import { TertiaryButton } from "@/components/ui/Buttons";
 
 import Image from "next/image";

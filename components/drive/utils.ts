@@ -1,43 +1,5 @@
 import { Vector3, Shape, Matrix4 } from "three";
-
-export type Question = {
-  dummy: string;
-  answer: string;
-  id: string;
-  question: string;
-  isMirror: boolean;
-  answerLeft: boolean;
-};
-
-export type QuestionUi = {
-  question: string;
-  left: { icon: string; text: string };
-  right: { icon: string; text: string };
-};
-
-export type Segment = {
-  points: Vector3[];
-  endDirection?: Vector3;
-  hasGates?: boolean;
-  questions?: Question[];
-};
-
-export type RoadData = {
-  segments: Segment[];
-  lastDirection: Vector3;
-  passedSegments: number;
-};
-
-export type GameState = {
-  started: boolean;
-  questionFailed: Question | null;
-  displayedQuestion: QuestionUi | null;
-  accelerateVehicle: boolean;
-  vehicleType: VehicleModel;
-  maxSpeed: number;
-}
-
-export type VehicleModel = "family_car" | "old_car" | "muscle_car";
+import { RoadData, Segment, Question } from "@/types/index.types";
 
 export const config = {
   road: {
@@ -72,30 +34,34 @@ export const config = {
   segmentDetail: 200
 };
 
+// Generate a new road segment with random curves
 export const generateRoadSegment = (previousEndPoint?: Vector3, previousDirection?: Vector3, hasGates = false): Segment => {
   const controlPoints: Vector3[] = [];
+
+  // Start point is the previous end point or origin
+  // Start direction is the previous direction or negative z-axis
   const startPoint = previousEndPoint || new Vector3(0, 0, 0);
   const prevDir = previousDirection || new Vector3(0, 0, -1);
 
+  // First two control points are based on the previous segment's direction for C2 continuity
   let currentDirection = prevDir.clone();
   controlPoints.push(startPoint.clone());
-
-  // First two control points are based on the previous segment's direction for C2 continuity
   controlPoints.push(startPoint.clone().add(currentDirection.clone().multiplyScalar(2)));
 
   // Add randomness to the tangent for curve generation
-  const randomOffset = (Math.random() - 0.5) * Math.PI * 0.5; // Offset for randomness
+  const randomOffset = (Math.random() - 0.5) * Math.PI * 0.5;
   const curveDirection = currentDirection.clone().applyAxisAngle(new Vector3(0, 1, 0), randomOffset).normalize();
 
-  // Calculate the endpoint with a random distance along the curve
+  // Third control point is the second control point with a random offset
   const randomDistance = Math.random() * 2 + 8;
-  const endPoint = controlPoints[1].clone().add(curveDirection.multiplyScalar(randomDistance));
-  controlPoints.push(endPoint);
+  const thirdControlPoint = controlPoints[1].clone().add(curveDirection.multiplyScalar(randomDistance));
+  controlPoints.push(thirdControlPoint);
 
-  // Final control point ensuring a smooth curve
+  // Last control point is the third control point with a random offset direction
   const lastDirection = curveDirection.clone().applyAxisAngle(new Vector3(0, 1, 0), randomOffset);
-  controlPoints.push(endPoint.clone().add(lastDirection.multiplyScalar(3)));
+  controlPoints.push(thirdControlPoint.clone().add(lastDirection.multiplyScalar(3)));
 
+  // Include the last direction in the return so the next segment can use it
   return {
     points: controlPoints,
     endDirection: lastDirection,
@@ -104,6 +70,7 @@ export const generateRoadSegment = (previousEndPoint?: Vector3, previousDirectio
   };
 };
 
+// Create a QuestionUi object from a Question object
 export const createQuestionUI = (currentQuestion: Question, questionIndex: number) => {
   const newQuestion = {
     question: currentQuestion.question,
@@ -120,13 +87,14 @@ export const createQuestionUI = (currentQuestion: Question, questionIndex: numbe
     newQuestion.right.text = currentQuestion.answer;
   }
 
-  // Set icons based on questionIndex and isMirror property
+  // Define icon sets for each question
   const iconSets = [
     { normal: ["hexagon", "triangle"], mirror: ["triangle", "hexagon"] },
     { normal: ["square", "circle"], mirror: ["circle", "square"] },
     { normal: ["pentagon", "diamond"], mirror: ["diamond", "pentagon"] },
   ];
 
+  // Set icons based isMirror property
   if (questionIndex >= 0 && questionIndex < iconSets.length) {
     const icons = currentQuestion.isMirror
       ? iconSets[questionIndex].mirror
@@ -138,6 +106,8 @@ export const createQuestionUI = (currentQuestion: Question, questionIndex: numbe
   return newQuestion;
 };
 
+// Keep going to the next segment until a segment with questions is found
+// Then return the first question in that segment
 export const getNextSegmentsFirstQuestion = (segmentIndex: number, roadData: RoadData) => {
   if (segmentIndex + 1 < roadData.segments.length) {
     const nextSegment = roadData.segments[segmentIndex + 1];
@@ -155,6 +125,8 @@ export const getNextSegmentsFirstQuestion = (segmentIndex: number, roadData: Roa
   return null;
 };
 
+// Gets the next question to display
+// Either the next in the current segment or the first question in the next segment
 export const getNextQuestion = (questionIndex: number, segmentIndex: number, roadData: RoadData) => {
   const currentQuestions = roadData.segments[segmentIndex].questions;
   if (currentQuestions && questionIndex + 1 < currentQuestions.length) {
@@ -167,18 +139,32 @@ export const getNextQuestion = (questionIndex: number, segmentIndex: number, roa
   }
 };
 
+// Set rotation based on vehicle offset from the center of the road
+// The closer to the center, the more rotation is applied
 export const getSidewaysRotation = (sideways: number, roadEdge: number) => { 
   let scale = 0;
   if (Math.abs(sideways) <= roadEdge) {
-    // Scale proportionally within roadEdge
     scale = 0.05 * (Math.abs(sideways) / roadEdge);
   } else if (Math.abs(sideways) <= 2 * roadEdge) {
-    // Decrease scale past roadEdge
     scale = 0.05 * (1 - (Math.abs(sideways) - roadEdge) / roadEdge);
   }
 
   return scale;
 };
+
+// To standardise the transformations of all models
+// We can combine matrices into a single matrix
+// These are the matrices for the muscle_car model
+
+//     [1,  0,   0, 0]      [1, 0, 0, 0]      [0.06, 0, 0, 0]
+//     [0,  1,   0, 0]      [0, 1, 0, 0]      [0, 0.06, 0, 0]
+// T = [0,  0,   1, 0]  R = [0, 0, 1, 0]  S = [0, 0, 0.06, 0] 
+//     [0, 0.08, 0, 1]      [0, 0, 0, 1]      [0,  0,  0,  1]
+
+//             [0.06, 0, 0, 0]
+//             [0, 0.06, 0, 0]
+// T * R * S = [0, 0, 0.06, 0]
+//             [0, 0.08, 0, 1]
 
 export const getModelMatrix = ( modelType:string ): Matrix4 => {
   let rotationMatrix, scaleMatrix, translationMatrix;
@@ -212,6 +198,7 @@ export const getModelMatrix = ( modelType:string ): Matrix4 => {
   return translationMatrix.multiply(rotationMatrix).multiply(scaleMatrix);
 };
 
+// Hexagon path for GateShape component
 export const getHexagonShape = (size: number) => {
   const hexagonShape = new Shape();
   for (let i = 0; i < 6; i++) {
@@ -229,6 +216,7 @@ export const getHexagonShape = (size: number) => {
   return hexagonShape;
 };
 
+// Circle path for GateShape component
 export const getCircleShape = (size: number) => {
   const circleShape = new Shape();
   circleShape.moveTo(0, -size);
@@ -237,6 +225,7 @@ export const getCircleShape = (size: number) => {
   return circleShape;
 };
 
+// Diamond path for GateShape component
 export const getDiamondShape = (size: number) => {
   const diamondShape = new Shape();
   diamondShape.moveTo(0, size);
@@ -248,6 +237,7 @@ export const getDiamondShape = (size: number) => {
   return diamondShape;
 };
 
+// Pentagon path for GateShape component
 export const getPentagonShape = (size: number) => {
   const pentagonShape = new Shape();
   for (let i = 0; i < 5; i++) {
@@ -265,6 +255,7 @@ export const getPentagonShape = (size: number) => {
   return pentagonShape;
 };
 
+// Square path for GateShape component
 export const getSquareShape = (size: number) => {
   const squareShape = new Shape();
   squareShape.moveTo(-size, -size);
@@ -276,6 +267,7 @@ export const getSquareShape = (size: number) => {
   return squareShape;
 };
 
+// Triangle path for GateShape component
 export const getTriangleShape = (size: number) => {
   const triangleShape = new Shape();
   for (let i = 0; i < 3; i++) {

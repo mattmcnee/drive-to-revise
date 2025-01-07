@@ -1,8 +1,8 @@
 import React, { useState, useRef, useEffect } from "react";
 import { useFrame, useThree } from "@react-three/fiber";
-import { useGLTF } from "@react-three/drei";
 import { Mesh, Vector3, CubicBezierCurve3, Group } from "three";
-import { RoadData, Segment, getSidewaysRotation } from "@/components/drive/utils";
+import { getSidewaysRotation } from "@/components/drive/utils";
+import { RoadData, Segment } from "@/types/index.types";
 import FpvCamera from "./FpvCamera";
 import VehicleModel from "./VehicleModel";
 import { toast } from "react-toastify";

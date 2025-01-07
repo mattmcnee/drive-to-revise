@@ -1,7 +1,8 @@
 import React from "react";
-import { PrimaryButton } from "@/components/ui/Buttons";
+import { PrimaryButton, TertiaryIconButton } from "@/components/ui/Buttons";
+import { GameState, VehicleModel, DatasetDocument } from "@/types/index.types";
+import Chatbot from "@/components/drive/chatbot/Chatbot";
 import styles from "./ScenePanel.module.scss";
-import { GameState } from "@/components/drive/utils";
 import Image from "next/image";
 
 import circleIcon from "@/public/icons/shapes/circle.svg";
@@ -10,16 +11,7 @@ import triangleIcon from "@/public/icons/shapes/triangle.svg";
 import diamondIcon from "@/public/icons/shapes/diamond.svg";
 import pentagonIcon from "@/public/icons/shapes/pentagon.svg";
 import hexagonIcon from "@/public/icons/shapes/hexagon.svg";
-
 import homeIcon from "@/public/icons/home.svg";
-
-import { TextEmbedding } from "../upload/utils";
-import { VehicleModel } from "@/components/drive/utils";
-
-import { TertiaryIconButton } from "@/components/ui/Buttons";
-
-import { DatasetDocument } from "@/firebase/firestoreInterface";
-import Chatbot from "@/components/drive/chatbot/Chatbot";
 
 const iconMap: { [key: string]: string } = {
   circle: circleIcon,
@@ -37,6 +29,7 @@ interface ScenePanelProps {
 }
 
 const ScenePanel = ({ gameState, startGame, dataset }: ScenePanelProps) => {
+  // Use a default question if no question is defined
   const question = gameState.displayedQuestion || {question: "", left: {text: "", icon: "hexagon"}, right: {text: "", icon: "hexagon"}};
 
   return (

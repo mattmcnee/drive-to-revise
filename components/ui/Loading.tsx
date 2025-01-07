@@ -1,7 +1,7 @@
 import React from "react";
 import styles from "./Loading.module.scss";
 
-const Loading = ({ active = true }) => {
+const Loading = () => {
   return (
     <div className={styles.loadingScreen}>
       <div className={styles.loader}></div>

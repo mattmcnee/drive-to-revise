@@ -1,7 +1,7 @@
 import React, { useMemo, memo } from "react";
 import { CubicBezierCurve3 } from "three";
 import RoadSegment from "@/components/drive/road/RoadSegment";
-import { Segment } from "@/components/drive/utils";
+import { Segment } from "@/types/index.types";  
 import { CurbSegment } from "./CurbSegment";
 import { LineSegment } from "./LineSegment";
 import { GateSegment } from "./GateSegment";

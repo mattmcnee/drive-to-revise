@@ -1,26 +1,7 @@
 import { RecursiveCharacterTextSplitter } from "@langchain/textsplitters";
 import axios from "axios";
 import { toast } from "react-toastify";
-
-export interface Question {
-  answer: string;
-  question: string;
-  dummy: string;
-  id?: string;
-}
-
-export interface Section {
-  index: number;
-  text: string;
-  embedding: string;
-  id: string;
-  questions: Question[];
-}
-
-export interface TextEmbedding {
-  text: string;
-  value: number[];
-}
+import { Question, TextEmbedding } from "@/types/index.types";
 
 const questionGenerationInstructions = "You generate questions with an answer and a dummy (incorrect) answer. Your output MUST ALWAYS be a JSON array.";
 const questionGenerationPrompt = `Output UP TO four questions designed to teach the provided content. Return fewer than four if there is insufficient content or [] if no relevant questions can be generated.

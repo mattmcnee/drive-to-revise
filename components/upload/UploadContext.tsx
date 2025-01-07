@@ -1,18 +1,6 @@
 
 import React, { createContext, useContext, useReducer, Dispatch } from "react";
-import { Section, TextEmbedding, Question } from "@/components/upload/utils";
-
-export interface UploadData {
-  documents: string[];
-  embeddings: TextEmbedding[];
-  questions: Question[];
-  status: string;
-  metadata: {
-      iconShape: string;
-      username: string;
-      title: string;
-  };
-}
+import { TextEmbedding, Question, UploadData } from "@/types/index.types";
 
 const randomShape = () => {
   const shapes = ["circle", "square", "triangle", "diamond", "pentagon", "hexagon"];

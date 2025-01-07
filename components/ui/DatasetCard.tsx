@@ -4,10 +4,7 @@ import styles from "./DatasetCard.module.scss";
 import Link from "next/link";
 
 const DatasetCard = ({ dataset }: { dataset: any }) => {
-
   const displayText = `${dataset.questions.length} Question${dataset.questions.length > 1 ? "s" : ""}`;
-
-
 
   return (
     <Link href={`/drive/${dataset.firestoreId}`}>

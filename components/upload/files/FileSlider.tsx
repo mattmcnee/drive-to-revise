@@ -5,11 +5,8 @@ import "slick-carousel/slick/slick-theme.css";
 import styles from "./FileSlider.module.scss";
 import DocumentEditor from "./FileEditor";
 
-
 import { toast } from "react-toastify";
-
-import { useUploadContext } from "../UploadContext";
-
+import { useUploadContext } from "@/components/upload/UploadContext";
 import { PrimaryButton } from "@/components/ui/Buttons";
 import { LeftButton, RightButton } from "./SliderButtons";
 
