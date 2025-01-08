@@ -1,3 +1,9 @@
+// For SSR (Server-Side Rendering)
+export const dynamic = "force-dynamic";
+
+// If we wanted to use ISR (Incremental Static Regeneration)
+// export const revalidate = 60
+
 import Navbar from "@/components/ui/Navbar";
 import { getPaginatedDatasets } from "@/firebase/firestoreInterface";
 import DatasetCard from "@/components/ui/DatasetCard";
